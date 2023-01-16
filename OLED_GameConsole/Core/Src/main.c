@@ -124,27 +124,3 @@ int main(void)
 
 	return 0;
 }
-
-/*
-int main(void)
-{
-	button_init();
-	DDRD = 0xFF;
-
-	adc_init();
-
-	volatile pin_state_e x;
-	volatile uint8_t y;
-	volatile button_state_e w;
-	// sei();
-	while (1)
-	{
-		buttons_updateAll();
-		w = button_getState1();
-		if (w == Button_Falling)
-		{
-			PORTD ^= 0xFF;
-		}
-	}
-}
-*/

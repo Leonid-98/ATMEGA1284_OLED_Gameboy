@@ -1,4 +1,5 @@
 .vscode
+.vs
 
 *.atsln
 OLED_GameConsole/Debug
