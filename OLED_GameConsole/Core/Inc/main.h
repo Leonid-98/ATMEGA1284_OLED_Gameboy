@@ -16,12 +16,19 @@ BUTTON  = PA4-PA7
 
 #define MAIN_H_
 
-#define __AVR_ATmega1284P__
+
 
 #ifndef F_CPU
 #define F_CPU 8000000UL
 #endif
 
 #include <util/delay.h>
+
+#define ENABLE_DEBUG_LED \
+DDRD |= 1 << PORTD4; \
+PORTD |= 1 << PORTD4;
+#define DISABLE_DEBUG_LED   \
+DDRD &= !(0 << PORTD4); \
+PORTD &= !(0 << PORTD4);
 
 #endif /* MAIN_H_ */
