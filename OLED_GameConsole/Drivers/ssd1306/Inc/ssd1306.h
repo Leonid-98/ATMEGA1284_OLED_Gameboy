@@ -46,6 +46,7 @@ typedef struct
 
 void ssd1306_Init(void);
 void ssd1306_Fill(SSD1306_COLOR color);
+void ssd1306_InverseColors(void);
 void ssd1306_UpdateScreen(void);
 
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);

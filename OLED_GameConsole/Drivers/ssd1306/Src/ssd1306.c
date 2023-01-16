@@ -161,6 +161,16 @@ void ssd1306_Fill(SSD1306_COLOR color)
     }
 }
 
+void ssd1306_InverseColors(void)
+{
+	uint32_t i;
+	
+	for (i = 0; i < SSD1306_BUFFER_SIZE; i++)
+	{
+		SSD1306_Buffer[i] ^= 0xFF;
+	}
+}
+
 /* Write the screenbuffer with changed to the screen */
 void ssd1306_UpdateScreen(void)
 {
