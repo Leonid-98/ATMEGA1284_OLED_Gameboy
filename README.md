@@ -1,2 +1,2 @@
 # ATMEGA1284_OLED_Gameboy
-Fully custom PCB, bare metal application
+AVR 8 bit bare metal application, fully custom PCB
