@@ -14,6 +14,8 @@
 #include "ssd1306.h"
 #include "joystcik.h"
 
+#include "dino.h"
+
 void run_debug_screen(void);
 void init_random_seed(void);
 uint8_t get_random_val(uint8_t n);
@@ -35,43 +37,16 @@ uint8_t get_random_val(uint8_t n);
 #define TREE_Y 35
 #define JUMP_PIXEL 22 // Number of pixel dino will jump
 
-
-typedef int16_t int16_pos;
-
-volatile int16_pos TimerTick;
+volatile uint16_t TimerTick = 0;
 ISR(TIMER0_OVF_vect)
 {
 	TimerTick++;
 	// Tick always should be positive, but less than 32768, it's snprintf limit
-	if (TimerTick > INT16_MAX / 2) 
+	if (TimerTick > INT16_MAX / 2)
 	{
-		TimerTick = 0; 
+		TimerTick = 0;
 	}
 }
-
-static const uint8_t dino1[] = {
-	// 'dino', 25x26px
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xfe, 0x00, 0x00, 0x06, 0xff, 0x00, 0x00, 0x0e, 0xff, 0x00,
-	0x00, 0x0f, 0xff, 0x00, 0x00, 0x0f, 0xff, 0x00, 0x00, 0x0f, 0xff, 0x00, 0x00, 0x0f, 0xc0, 0x00,
-	0x00, 0x0f, 0xfc, 0x00, 0x40, 0x0f, 0xc0, 0x00, 0x40, 0x1f, 0x80, 0x00, 0x40, 0x7f, 0x80, 0x00,
-	0x60, 0xff, 0xe0, 0x00, 0x71, 0xff, 0xa0, 0x00, 0x7f, 0xff, 0x80, 0x00, 0x7f, 0xff, 0x80, 0x00,
-	0x7f, 0xff, 0x80, 0x00, 0x3f, 0xff, 0x00, 0x00, 0x1f, 0xff, 0x00, 0x00, 0x0f, 0xfe, 0x00, 0x00,
-	0x03, 0xfc, 0x00, 0x00, 0x01, 0xdc, 0x00, 0x00, 0x01, 0x8c, 0x00, 0x00, 0x01, 0x8c, 0x00, 0x00,
-	0x01, 0x0c, 0x00, 0x00, 0x01, 0x8e, 0x00, 0x00};
-
-static const uint8_t tree1[] = {
-	// 'tree1', 11x23px
-	0x1e, 0x00, 0x1f, 0x00, 0x1f, 0x40, 0x1f, 0xe0, 0x1f, 0xe0, 0xdf, 0xe0, 0xff, 0xe0, 0xff, 0xe0,
-	0xff, 0xe0, 0xff, 0xe0, 0xff, 0xe0, 0xff, 0xe0, 0xff, 0xc0, 0xff, 0x00, 0xff, 0x00, 0x7f, 0x00,
-	0x1f, 0x00, 0x1f, 0x00, 0x1f, 0x00, 0x1f, 0x00, 0x1f, 0x00, 0x1f, 0x00, 0x1f, 0x00};
-
-static const uint8_t tree2[] = {
-	// 'tree2', 22x23px
-	0x1e, 0x01, 0xe0, 0x1f, 0x03, 0xe0, 0x1f, 0x4f, 0xe8, 0x1f, 0xff, 0xfc, 0x1f, 0xff, 0xfc, 0xdf,
-	0xff, 0xfc, 0xff, 0xff, 0xfc, 0xff, 0xff, 0xfc, 0xff, 0xff, 0xfc, 0xff, 0xff, 0xfc, 0xff, 0xff,
-	0xfc, 0xff, 0xef, 0xfc, 0xff, 0x83, 0xfc, 0xff, 0x03, 0xfc, 0xff, 0x03, 0xf8, 0x7f, 0x03, 0xe0,
-	0x1f, 0x03, 0xe0, 0x1f, 0x03, 0xe0, 0x1f, 0x03, 0xe0, 0x1f, 0x03, 0xe0, 0x1f, 0x03, 0xe0, 0x1f,
-	0x03, 0xe0, 0x1f, 0x03, 0xe0};
 
 #define MENU_LINE_X 5
 #define MENU_LINE0_Y 3
@@ -88,28 +63,6 @@ static const uint8_t tree2[] = {
 #define SELECTOR_LINE2_Y_END 48
 #define SELECTOR_LINE3_Y_START 49
 #define SELECTOR_LINE3_Y_END 62
-
-// #########################
-#define DINO_WIDTH 25
-#define DINO_HEIGHT 26
-#define DINO_INIT_X 10 // Dino initial spawn location
-#define DINO_INIT_Y 29 // Dino initial spawn location
-
-#define BASE_LINE_X 0
-#define BASE_LINE_Y 54
-#define BASE_LINE_X1 127
-#define BASE_LINE_Y1 54
-
-#define TREE1_WIDTH 11
-#define TREE1_HEIGHT 23
-
-#define TREE2_WIDTH 22
-#define TREE2_HEIGHT 23
-
-#define TREE_Y 35
-
-#define JUMP_PIXEL 22 // Number of pixel dino will jump
-// ##########################
 
 void game_showMainMenu()
 {
@@ -137,160 +90,6 @@ void introMessage()
 	ssd1306_WriteString("Debug", Font_7x10, White);
 }
 
-// Move dino function
-void moveDino(int16_t y)
-{
-	ssd1306_DrawBitmap(DINO_INIT_X, y, dino1, DINO_WIDTH, DINO_HEIGHT, White);
-}
-
-// Move tree funciton
-void moveTree(int16_t x, uint8_t type)
-{
-	if (type == 0)
-	{
-		ssd1306_DrawBitmap(x, TREE_Y, tree1, TREE1_WIDTH, TREE1_HEIGHT, White);
-	}
-	else if (type == 1)
-	{
-		ssd1306_DrawBitmap(x, TREE_Y, tree2, TREE2_WIDTH, TREE2_HEIGHT, White);
-	}
-}
-
-// Game over display with score
-void gameOver(int16_t score)
-{
-	while (!(
-	button_getState1() == Button_Falling ||
-	button_getState2() == Button_Falling ||
-	button_getState3() == Button_Falling ||
-	button_getState4() == Button_Falling
-	)) {
-		buttons_updateAll();
-		};
-	// display.clearDisplay();
-
-	// display.setTextSize(2); // Draw 2X-scale text
-	// display.setTextColor(SSD1306_WHITE);
-	// display.setCursor(10, 5);
-	// display.println("Game Over");
-
-	// display.setTextSize(1);
-
-	// display.setCursor(10, 30);
-	// display.print("Score: ");
-	// display.print(score);
-
-	// display.setCursor(1, 45);
-	// display.println("Enter 1 To Play Again");
-
-	// display.display();
-}
-
-// Display score while running the game
-void displayScore(int16_pos score)
-{
-	static char buff[20];
-
-	snprintf(buff, 20, "Score: %d    ", score); // TODO score
-	ssd1306_SetCursor(50, 10);
-	ssd1306_WriteString(buff, Font_6x8, White);
-}
-
-// Main play function
-void play()
-{
-
-	int16_t tree_x = 127;
-	int16_t tree1_x = 195;
-	uint8_t tree_type = get_random_val(1);
-	uint8_t tree_type1 = get_random_val(1);
-
-	int16_t dino_y = DINO_INIT_Y;
-	uint8_t input_command;
-	uint8_t jump = 0;
-
-	int16_pos score = 0;
-
-	for (;;)
-	{
-		buttons_updateAll();
-		ssd1306_Fill(Black);
-		score = TimerTick;
-
-		if (button_getState4() == Button_Falling && jump == 0)
-		{
-				jump = 1;
-		}
-
-		if (jump == 1)
-		{
-			dino_y--;
-			if (dino_y == (DINO_INIT_Y - JUMP_PIXEL))
-			{
-				jump = 2;
-			}
-		}
-		else if (jump == 2)
-		{
-			dino_y++;
-			if (dino_y == DINO_INIT_Y)
-			{
-				jump = 0;
-			}
-		}
-		
-		if (tree_x <= (DINO_INIT_X + DINO_WIDTH) && tree_x >= (DINO_INIT_X + (DINO_WIDTH / 2)))
-		{
-			if (dino_y >= (DINO_INIT_Y - 3))
-			{
-				// Collision Happened
-				break;
-			}
-		}
-
-		if (tree1_x <= (DINO_INIT_X + DINO_WIDTH) && tree1_x >= (DINO_INIT_X + (DINO_WIDTH / 2)))
-		{
-			if (dino_y >= (DINO_INIT_Y - 3))
-			{
-				// Collision Happened
-				break;
-			}
-		}
-
-		displayScore(score);
-		moveTree(tree_x, tree_type);
-		moveTree(tree1_x, tree_type1);
-		moveDino(dino_y);
-		// display.drawLine(0, 54, 127, 54, SSD1306_WHITE); TODO CHECK WHAT IS THIS
-		//ssd1306_DrawRectangle(0, 54, 128, 54, White);
-
-		tree_x--;
-		tree1_x--;
-		if (tree_x == 0)
-		{
-			tree_x = 127;
-			tree_type = get_random_val(1);
-		}
-
-		if (tree1_x == 0)
-		{
-			tree1_x = 195;
-			tree_type1 = get_random_val(1);
-		}
-		ssd1306_UpdateScreen();
-	}
-	gameOver(score);
-}
-
-void renderScene(int16_t i)
-{
-
-	ssd1306_DrawBitmap(10, 29, dino1, 25, 26, White);
-	ssd1306_DrawBitmap(50, TREE_Y, tree1, 11, 23, White);
-	ssd1306_DrawBitmap(100, TREE_Y, tree2, 22, 23, White);
-	// display.drawLine(0, 54, 127, 54, White); TODO test this as well
-	// display.drawPixel(i, 60, White);
-}
 
 int main(void)
 {
@@ -299,21 +98,21 @@ int main(void)
 	button_init();
 	ssd1306_Init();
 	buttons_updateAll();
-	
+
 	// fast timer to show 7SEG numbers
 	TCCR0A = 0;
 	TCCR0B = (1 << CS02) | (0 << CS01) | (1 << CS00);
 	TIMSK0 = (1 << TOIE0); // overflow interrupt en
-	
+
 	sei();
-	
+
 	// ssd1306_DrawBitmap(10, 10, dino1, 25, 26, White);
 	// ssd1306_DrawBitmap(50, 10, tree1, 11, 23, White);
 	// ssd1306_DrawBitmap(100, 10, tree2, 22, 23, White);
 	// game_showMainMenu();
 	// sei();
 	// ssd1306_Fill(Black);
-	play();
+	dino_gameloop(TimerTick);
 	while (1)
 	{
 	}

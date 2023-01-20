@@ -131,6 +131,7 @@
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
       <Value>../Drivers/ssd1306/Inc</Value>
       <Value>../Common/Inc</Value>
+      <Value>../Games/Inc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -200,6 +201,12 @@
     <Compile Include="Drivers\ssd1306\Src\ssd1306_fonts.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Games\Inc\dino.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Games\Src\dino.c">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\Inc" />
@@ -212,6 +219,9 @@
     <Folder Include="Drivers\ssd1306\Inc" />
     <Folder Include="Drivers\ssd1306\Src" />
     <Folder Include="Common" />
+    <Folder Include="Games" />
+    <Folder Include="Games\Inc" />
+    <Folder Include="Games\Src" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
