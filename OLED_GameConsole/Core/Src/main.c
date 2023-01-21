@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "main.h"
+#include "timer.h"
 #include "button.h"
 #include "ssd1306.h"
 #include "joystcik.h"
@@ -36,17 +37,6 @@ uint8_t get_random_val(uint8_t n);
 #define TREE2_HEIGHT 23
 #define TREE_Y 35
 #define JUMP_PIXEL 22 // Number of pixel dino will jump
-
-volatile uint16_t TimerTick = 0;
-ISR(TIMER0_OVF_vect)
-{
-	TimerTick++;
-	// Tick always should be positive, but less than 32768, it's snprintf limit
-	if (TimerTick > INT16_MAX / 2)
-	{
-		TimerTick = 0;
-	}
-}
 
 #define MENU_LINE_X 5
 #define MENU_LINE0_Y 3
@@ -90,19 +80,15 @@ void introMessage()
 	ssd1306_WriteString("Debug", Font_7x10, White);
 }
 
-
 int main(void)
 {
 	ENABLE_DEBUG_LED;
+	timer_init();
 	joystick_init();
+	init_random_seed();
 	button_init();
 	ssd1306_Init();
 	buttons_updateAll();
-
-	// fast timer to show 7SEG numbers
-	TCCR0A = 0;
-	TCCR0B = (1 << CS02) | (0 << CS01) | (1 << CS00);
-	TIMSK0 = (1 << TOIE0); // overflow interrupt en
 
 	sei();
 
@@ -112,9 +98,12 @@ int main(void)
 	// game_showMainMenu();
 	// sei();
 	// ssd1306_Fill(Black);
+
 	dino_gameloop(TimerTick);
+
 	while (1)
 	{
+		//run_debug_screen();
 	}
 
 	return 0;
@@ -122,64 +111,38 @@ int main(void)
 
 void run_debug_screen(void)
 {
-	static char buff0[50];
-	static char buff1[50];
-	static char buff3[50];
+	static char buff0[20];
+	static char buff1[20];
+	static char buff2[20];
+	static char buff3[20];
 
 	buttons_updateAll();
 
-	snprintf(buff0, 50, "Joy x: %d   ", joystcik_getX());
+	snprintf(buff0, 20, "Joy x: %d   ", joystcik_getX());
 	ssd1306_SetCursor(0, 2);
 	ssd1306_WriteString(buff0, Font_6x8, White);
 
-	snprintf(buff1, 50, "Joy y: %d   ", joystcik_getY());
+	snprintf(buff1, 20, "Joy y: %d   ", joystcik_getY());
 	ssd1306_SetCursor(0, 12);
 	ssd1306_WriteString(buff1, Font_6x8, White);
 
-	snprintf(buff3, 50, "Random: %d   ", get_random_val(10));
+	snprintf(buff2, 20, "Random: %d   ", get_random_val(10));
 	ssd1306_SetCursor(64, 2);
+	ssd1306_WriteString(buff2, Font_6x8, White);
+
+	snprintf(buff3, 20, "Tick: %d   ", TimerTick);
+	ssd1306_SetCursor(64, 12);
 	ssd1306_WriteString(buff3, Font_6x8, White);
 
-	ssd1306_FillCircle(56, 35, 5, White);
-	ssd1306_FillCircle(71, 35, 5, White);
-	ssd1306_FillCircle(71, 50, 5, White);
-	ssd1306_FillCircle(56, 50, 5, White);
+	ssd1306_FillCircle(10, 35, 5, White);
+	ssd1306_FillCircle(25, 35, 5, White);
+	ssd1306_FillCircle(25, 50, 5, White);
+	ssd1306_FillCircle(10, 50, 5, White);
 
-	if (button_getState4() == Button_Down)
-	{
-		ssd1306_FillCircle(56, 35, 4, White);
-	}
-	else
-	{
-		ssd1306_FillCircle(56, 35, 4, Black);
-	}
-
-	if (button_getState3() == Button_Down)
-	{
-		ssd1306_FillCircle(71, 35, 4, White);
-	}
-	else
-	{
-		ssd1306_FillCircle(71, 35, 4, Black);
-	}
-
-	if (button_getState2() == Button_Down)
-	{
-		ssd1306_FillCircle(56, 50, 4, White);
-	}
-	else
-	{
-		ssd1306_FillCircle(56, 50, 4, Black);
-	}
-
-	if (button_getState1() == Button_Down)
-	{
-		ssd1306_FillCircle(71, 50, 4, White);
-	}
-	else
-	{
-		ssd1306_FillCircle(71, 50, 4, Black);
-	}
+	(button_getState4() == Button_Down) ? ssd1306_FillCircle(10, 35, 4, White) : ssd1306_FillCircle(10, 35, 4, Black);
+	(button_getState3() == Button_Down) ? ssd1306_FillCircle(25, 35, 4, White) : ssd1306_FillCircle(25, 35, 4, Black);
+	(button_getState2() == Button_Down) ? ssd1306_FillCircle(10, 50, 4, White) : ssd1306_FillCircle(10, 50, 4, Black);
+	(button_getState1() == Button_Down) ? ssd1306_FillCircle(25, 50, 4, White) : ssd1306_FillCircle(25, 50, 4, Black);
 
 	ssd1306_UpdateScreen();
 }
