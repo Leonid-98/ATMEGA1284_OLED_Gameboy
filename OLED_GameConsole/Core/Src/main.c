@@ -18,9 +18,7 @@
 #include "game.h"
 #include "dino.h"
 
-
-
-void run_debug_screen(void);
+void debug_mainloop(void);
 void init_random_seed(void);
 uint8_t get_random_val(uint8_t n);
 
@@ -40,7 +38,6 @@ uint8_t get_random_val(uint8_t n);
 #define SELECTOR_LINE3_Y_START 49
 #define SELECTOR_LINE3_Y_END 62
 
-
 int main(void)
 {
 	// ENABLE_DEBUG_LED;
@@ -51,6 +48,14 @@ int main(void)
 	ssd1306_Init();
 	buttons_updateAll();
 	sei();
+
+	ssd1306_DrawBitmap(0, 0, game_over_bmp, 128, 64, White);
+	ssd1306_UpdateScreen();
+	while (1);
+	while (1)
+	{
+		dino_gameloop(); // TODO remove
+	}
 
 	game_selected_e selected_game;
 	while (1)

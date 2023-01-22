@@ -8,6 +8,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <stdint.h>
+
 // EEPROM addresses (stores dword)
 #define GAME_DINO_ADDR      (uint16_t *)0x00
 #define GAME_SNAKE_ADDR     (uint16_t *)0x02
@@ -29,5 +31,8 @@ void game_clearAllScores(void);
 void game_drawMainMenu();
 void game_drawSelector(game_selected_e selected_game);
 game_selected_e game_mainMenuLoop();
+void game_over(uint16_t score, uint8_t game);
+
+extern const uint8_t game_over_bmp[];
 
 #endif /* GAME_H_ */
