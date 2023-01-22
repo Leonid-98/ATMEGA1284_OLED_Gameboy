@@ -15,7 +15,10 @@
 #include "ssd1306.h"
 #include "joystcik.h"
 
+#include "game.h"
 #include "dino.h"
+
+
 
 void run_debug_screen(void);
 void init_random_seed(void);
@@ -37,91 +40,8 @@ uint8_t get_random_val(uint8_t n);
 #define SELECTOR_LINE3_Y_START 49
 #define SELECTOR_LINE3_Y_END 62
 
-typedef enum
-{
-	Game_Dino,
-	Game_Snake,
-	Game_Pong,
-	Game_Debug
-} game_selected_e;
 
-void game_drawMainMenu()
-{
-	ssd1306_SetCursor(0, 0);
-	ssd1306_WriteString("Select game:", Font_11x18, White);
-
-	ssd1306_SetCursor(10, 20);
-	ssd1306_WriteString("Dino", Font_7x10, White);
-	ssd1306_SetCursor(10, 30);
-	ssd1306_WriteString("Snake", Font_7x10, White);
-	ssd1306_SetCursor(10, 40);
-	ssd1306_WriteString("Pong", Font_7x10, White);
-	ssd1306_SetCursor(10, 50);
-	ssd1306_WriteString("Debug", Font_7x10, White);
-}
-
-void game_drawSelector(game_selected_e selected_game)
-{
-	ssd1306_FillCircle(4, 24, 2, Black);
-	ssd1306_FillCircle(4, 34, 2, Black);
-	ssd1306_FillCircle(4, 44, 2, Black);
-	ssd1306_FillCircle(4, 54, 2, Black);
-	switch (selected_game)
-	{
-	case Game_Dino:
-		ssd1306_FillCircle(4, 24, 2, White);
-		break;
-	case Game_Snake:
-		ssd1306_FillCircle(4, 34, 2, White);
-		break;
-	case Game_Pong:
-		ssd1306_FillCircle(4, 44, 2, White);
-		break;
-	case Game_Debug:
-		ssd1306_FillCircle(4, 54, 2, White);
-		break;
-	default:
-		break;
-	}
-}
-
-game_selected_e game_mainMenuLoop()
-{
-	game_selected_e selected_game = Game_Dino;
-
-	ssd1306_Fill(Black);
-	game_drawMainMenu();
-	while (1)
-	{
-		buttons_updateAll();
-
-		if (button_getState3() == Button_Falling)
-		{
-			if (selected_game != Game_Debug) // Last game
-			{
-				selected_game++;
-			}
-		}
-
-		if (button_getState1() == Button_Falling)
-		{
-			if (selected_game != Game_Dino) // First game
-			{
-				selected_game--;
-			}
-		}
-
-		if (button_getState4() == Button_Falling)
-		{
-			return selected_game;
-		}
-
-		game_drawSelector(selected_game);
-		ssd1306_UpdateScreen();
-	}
-}
-
-void main(void)
+int main(void)
 {
 	// ENABLE_DEBUG_LED;
 	timer_init();
@@ -154,6 +74,8 @@ void main(void)
 			break;
 		}
 	}
+
+	return 0;
 }
 
 void debug_mainloop(void)

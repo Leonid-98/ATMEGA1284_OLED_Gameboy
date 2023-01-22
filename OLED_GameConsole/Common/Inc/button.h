@@ -9,14 +9,19 @@
 
 #include <avr/io.h>
 
-#define BUTTON_DDR DDRA
-#define BUTTON_PORT PORTA
-#define BUTTON_PIN PINA
+#define BUTTON_DDR 					DDRA
+#define BUTTON_PORT 				PORTA
+#define BUTTON_PIN 					PINA
 
-#define BUTTON_1_PIN 5
-#define BUTTON_2_PIN 4
-#define BUTTON_3_PIN 7
-#define BUTTON_4_PIN 6
+#define BUTTON_1_PIN 				5
+#define BUTTON_2_PIN 				4
+#define BUTTON_3_PIN 				7
+#define BUTTON_4_PIN 				6
+
+#define BUTTON_A_IS_PRESSED			// TODO define 
+#define BUTTON_B_IS_PRESSED
+#define BUTTON_UP_IS_PRESSED
+#define BUTTON_DOWN_IS_PRESSED
 
 typedef enum
 {
