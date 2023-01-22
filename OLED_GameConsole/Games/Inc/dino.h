@@ -24,18 +24,18 @@
 #define TREE1_WIDTH 11
 #define TREE1_HEIGHT 23
 
-#define TREE2_WIDTH 22
+#define TREE2_WIDTH 15
 #define TREE2_HEIGHT 23
 
 #define TREE_Y 35
 
 #define JUMP_PIXEL 22 // Number of pixel dino will jump
 
-void moveDino(int16_t y);
-void moveTree(int16_t x, uint8_t type);
-void gameOver(uint16_t score);
-void renderScene(int16_t i);
-void displayScore(uint16_t score);
-void dino_gameloop(uint16_t timer_tick);
+void dino_moveDino(int16_t y);
+void dino_moveTree(int16_t x, uint8_t type);
+void dino_gameOver(uint16_t score);
+void dino_renderScene(int16_t i);
+void dino_displayScore(uint16_t score);
+void dino_gameloop();
 
 #endif /* DINO_H_ */

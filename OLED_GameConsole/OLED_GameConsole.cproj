@@ -210,7 +210,13 @@
     <Compile Include="Games\Inc\dino.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Games\Inc\game.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Games\Src\dino.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Games\Src\game.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
