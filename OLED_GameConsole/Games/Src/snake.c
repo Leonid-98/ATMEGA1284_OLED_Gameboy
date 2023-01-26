@@ -62,7 +62,7 @@ void updatedirection()
           {
               buttonpressed=DIRDOWN;
          //     Serial.println("DOWN pressed");
-         //     Serial.println(buttonpressed);
+         //     Serial.println(bustonpressed);
               butdown=false;
               tone(SND,1500,10);
           }</p><p>        if(butleft==true)
