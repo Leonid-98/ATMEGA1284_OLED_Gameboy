@@ -48,15 +48,7 @@ int main(void)
 	ssd1306_Init();
 	buttons_updateAll();
 	sei();
-
-	ssd1306_DrawBitmap(0, 0, game_over_bmp, 128, 64, White);
-	ssd1306_UpdateScreen();
-	while (1);
-	while (1)
-	{
-		dino_gameloop(); // TODO remove
-	}
-
+	
 	game_selected_e selected_game;
 	while (1)
 	{
@@ -111,8 +103,13 @@ void debug_mainloop(void)
 		ssd1306_SetCursor(64, 12);
 		ssd1306_WriteString(buff3, Font_6x8, White);
 
-		ssd1306_SetCursor(70, 50);
+		ssd1306_SetCursor(64, 50);
 		ssd1306_WriteString("exit: A+B", Font_6x8, White);
+		
+		ssd1306_SetCursor(64, 30);
+		ssd1306_WriteString("clr score:", Font_6x8, White);
+		ssd1306_SetCursor(64, 40);
+		ssd1306_WriteString("^ + v", Font_6x8, White);
 
 		ssd1306_FillCircle(10, 35, 5, White);
 		ssd1306_FillCircle(25, 35, 5, White);
@@ -123,7 +120,13 @@ void debug_mainloop(void)
 		(button_getState2() == Button_Down) ? ssd1306_FillCircle(25, 35, 4, White) : ssd1306_FillCircle(25, 35, 4, Black);
 		(button_getState3() == Button_Down) ? ssd1306_FillCircle(10, 50, 4, White) : ssd1306_FillCircle(10, 50, 4, Black);
 		(button_getState4() == Button_Down) ? ssd1306_FillCircle(25, 50, 4, White) : ssd1306_FillCircle(25, 50, 4, Black);
-
+		
+		if (button_getState1() == Button_Down && button_getState3() == Button_Down)
+		{
+			game_clearAllScores();
+		}
+		
+		
 		if (button_getState2() == Button_Down && button_getState4() == Button_Down)
 		{
 			break;

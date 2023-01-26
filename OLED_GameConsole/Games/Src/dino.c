@@ -83,15 +83,14 @@ void dino_gameloop()
 	dino.x = TREE2_SPAWN_X;
 	dino.y = TREE_Y;
 
-	int16_t tree1_x = TREE1_SPAWN_X;
+	int16_t tree1_x = TREE1_SPAWN_X; // TODO get rid of that variables
 	int16_t tree2_x = TREE2_SPAWN_X;
-	uint8_t tree_type = get_random_val(1);
-	uint8_t tree_type1 = get_random_val(1);
+	uint8_t tree1_type = get_random_val(1);
+	uint8_t tree2_type = get_random_val(1);
 
 	uint8_t dino_state = Dino_Running;
 
 	uint16_t score = 0;
-	// game_over(score, Game_Dino); // TODO remove debug
 	TimerTick = 0;
 	while (1)
 	{
@@ -140,8 +139,8 @@ void dino_gameloop()
 		}
 
 		dino_displayScore(score);
-		dino_moveTree(tree1_x, tree_type);
-		dino_moveTree(tree2_x, tree_type1);
+		dino_moveTree(tree1_x, tree1_type);
+		dino_moveTree(tree2_x, tree2_type);
 		dino_moveDino(dino.y);
 
 		// display.drawLine(0, 54, 127, 54, SSD1306_WHITE); TODO CHECK WHAT IS THIS
@@ -152,13 +151,13 @@ void dino_gameloop()
 		if (tree1_x == 0)
 		{
 			tree1_x = TREE1_SPAWN_X;
-			tree_type = get_random_val(1);
+			tree1_type = get_random_val(1);
 		}
 
 		if (tree2_x == 0)
 		{
 			tree2_x = TREE2_SPAWN_X;
-			tree_type1 = get_random_val(1);
+			tree2_type = get_random_val(1);
 		}
 		ssd1306_UpdateScreen();
 	}

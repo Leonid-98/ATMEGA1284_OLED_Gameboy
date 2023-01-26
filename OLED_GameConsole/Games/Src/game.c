@@ -122,38 +122,55 @@ void game_clearAllScores(void)
 
 void game_drawMainMenu()
 {
+	static char buff[20];
+	
 	ssd1306_SetCursor(0, 0);
 	ssd1306_WriteString("Select game:", Font_11x18, White);
 
 	ssd1306_SetCursor(10, 20);
 	ssd1306_WriteString("Dino", Font_7x10, White);
+	ssd1306_SetCursor(60, 20);
+	snprintf(buff, 20, "Top: %d", game_readScore(Game_Dino));
+	ssd1306_WriteString(buff, Font_6x8, White);
+	buff[0] = '\0';
+	
 	ssd1306_SetCursor(10, 30);
 	ssd1306_WriteString("Snake", Font_7x10, White);
+	ssd1306_SetCursor(60, 30);
+	snprintf(buff, 20, "Top: %d", game_readScore(Game_Snake));
+	ssd1306_WriteString(buff, Font_6x8, White);
+	buff[0] = '\0';
+	
 	ssd1306_SetCursor(10, 40);
 	ssd1306_WriteString("Pong", Font_7x10, White);
+	ssd1306_SetCursor(60, 40);
+	snprintf(buff, 20, "Top: %d", game_readScore(Game_Pong));
+	ssd1306_WriteString(buff, Font_6x8, White);
+	buff[0] = '\0';
+	
 	ssd1306_SetCursor(10, 50);
 	ssd1306_WriteString("Debug", Font_7x10, White);
 }
 
 void game_drawSelector(game_selected_e selected_game)
 {
-	ssd1306_FillCircle(4, 24, 2, Black);
-	ssd1306_FillCircle(4, 34, 2, Black);
-	ssd1306_FillCircle(4, 44, 2, Black);
-	ssd1306_FillCircle(4, 54, 2, Black);
+	ssd1306_FillCircle(3, 24, 2, Black);
+	ssd1306_FillCircle(3, 34, 2, Black);
+	ssd1306_FillCircle(3, 44, 2, Black);
+	ssd1306_FillCircle(3, 54, 2, Black);
 	switch (selected_game)
 	{
 	case Game_Dino:
-		ssd1306_FillCircle(4, 24, 2, White);
+		ssd1306_FillCircle(3, 24, 2, White);
 		break;
 	case Game_Snake:
-		ssd1306_FillCircle(4, 34, 2, White);
+		ssd1306_FillCircle(3, 34, 2, White);
 		break;
 	case Game_Pong:
-		ssd1306_FillCircle(4, 44, 2, White);
+		ssd1306_FillCircle(3, 44, 2, White);
 		break;
 	case Game_Debug:
-		ssd1306_FillCircle(4, 54, 2, White);
+		ssd1306_FillCircle(3, 54, 2, White);
 		break;
 	default:
 		break;
@@ -199,14 +216,41 @@ game_selected_e game_mainMenuLoop()
 void game_over(uint16_t score, uint8_t game)
 {
 	static char buff[20];
+	uint8_t score_pos_x;
+	
 	ssd1306_Fill(Black);
+	ssd1306_DrawBitmap(0, 0, game_over_bmp, SSD1306_WIDTH, SSD1306_HEIGHT, White);
+	
+	if (score < 10)
+	{
+		score_pos_x = GAME_SCORE_X0;
+	}
+	else if (score < 100)
+	{
+		score_pos_x = GAME_SCORE_X1;
+	}
+	else if (score < 1000)
+	{
+		score_pos_x = GAME_SCORE_X2;
+	}
+	else if (score < 10000)
+	{
+		score_pos_x = GAME_SCORE_X3;
+	}
+	else
+	 {
+		score_pos_x = GAME_SCORE_X4;
+	}
+	
+	snprintf(buff, 20, "%d", score);
+	ssd1306_SetCursor(score_pos_x, GAME_SCORE_Y);
+	ssd1306_WriteString(buff, Font_11x18, White);
+	
+	if (score > game_readScore(game))
+	{
+		game_writeScore(score, game);
+	}
 
-	ssd1306_SetCursor(0, 0);
-	ssd1306_WriteString("Game over", Font_11x18, White);
-
-	snprintf(buff, 20, "Score: %d    ", score); // TODO score
-	ssd1306_SetCursor(32, 20);
-	ssd1306_WriteString(buff, Font_6x8, White);
 	ssd1306_UpdateScreen();
 	while (!(
 		button_getState1() == Button_Falling ||
