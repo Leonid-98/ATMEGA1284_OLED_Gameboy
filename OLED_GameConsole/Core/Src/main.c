@@ -48,19 +48,6 @@ int main(void)
 	ssd1306_Init();
 	buttons_updateAll();
 	sei();
-	
-	//// TODO debug remove
-	//char buff[20];
-	//uint16_t i = 0;
-	//while (1)
-	//{
-		//snprintf(buff, 20, "i: %d   ", i++);
-		//ssd1306_SetCursor(0, 32);
-		//ssd1306_WriteString(buff, Font_16x26, White);
-		//ssd1306_UpdateScreen();
-//
-	//}
-
 	game_selected_e selected_game;
 	while (1)
 	{

@@ -26,8 +26,21 @@ void tw_start(void)
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
 
 	/* Wait for TWINT flag to set */
-	uint16_t i = 0;
-	while (!(TWCR & (1 << TWINT)));
+	volatile uint8_t try_counter = 0;
+	while (try_counter < 10)
+	{
+		volatile uint16_t i = 0;
+		while (!(TWCR & (1 << TWINT)))
+		{
+			i++;
+			if (i > 64000)
+			{
+				break;
+			}
+		}
+		try_counter++;
+	}
+	
 }
 
 void tw_stop(void)
@@ -43,6 +56,22 @@ void tw_write(uint8_t data)
 	TWCR = (1 << TWINT) | (1 << TWEN);
 
 	/* Wait for TWINT flag to set */
-	uint16_t i = 0;
-	while (!(TWCR & (1 << TWINT)));
+	uint16_t timeout = 0;
+	uint8_t i;
+	for(i = 0; i < 10; i++)
+	{
+		while (!(TWCR & (1 << TWINT))) 
+		{
+			timeout++;
+			if (timeout > 64000) 
+			{
+				break;
+			}
+		}
+		if (TWCR & (1 << TWINT))
+		{
+			break;
+		}
+	}
+	
 }
