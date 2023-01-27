@@ -2,8 +2,10 @@
  * dino.c
  *
  * Created: 20.01.2023 03:41:12
- *  Author: kotse
+ *  Author: Leonid Tsigrinski
  */
+
+#include <stdbool.h>
 
 #include "game.h"
 #include "dino.h"
@@ -61,105 +63,110 @@ void dino_displayScore(uint16_t score)
 
 void dino_gameloop()
 {
-
-	dino_object_st dino;
-	dino.bitmap = dino_bmp;
-	dino.width = DINO_WIDTH;
-	dino.height = DINO_HEIGHT;
-	dino.x = DINO_SPAWN_X;
-	dino.y = DINO_SPAWN_Y;
-
-	dino_object_st tree1;
-	dino.bitmap = tree1_bmp;
-	dino.width = TREE1_WIDTH;
-	dino.height = TREE1_HEIGHT;
-	dino.x = TREE1_SPAWN_X;
-	dino.y = TREE_Y;
-
-	dino_object_st tree2;
-	dino.bitmap = tree2_bmp;
-	dino.width = TREE2_WIDTH;
-	dino.height = TREE2_HEIGHT;
-	dino.x = TREE2_SPAWN_X;
-	dino.y = TREE_Y;
-
-	int16_t tree1_x = TREE1_SPAWN_X; // TODO get rid of that variables
-	int16_t tree2_x = TREE2_SPAWN_X;
-	uint8_t tree1_type = get_random_val(1);
-	uint8_t tree2_type = get_random_val(1);
-
-	uint8_t dino_state = Dino_Running;
-
-	uint16_t score = 0;
-	TimerTick = 0;
-	while (1)
+	while (true)
 	{
-		buttons_updateAll();
-		ssd1306_Fill(Black);
-		score = TimerTick;
+		dino_object_st dino;
+		dino.bitmap = dino_bmp;
+		dino.width = DINO_WIDTH;
+		dino.height = DINO_HEIGHT;
+		dino.x = DINO_SPAWN_X;
+		dino.y = DINO_SPAWN_Y;
 
-		if (button_getState4() == Button_Falling && dino_state == Dino_Running)
-		{
-			dino_state = Dino_Jumping;
-		}
+		dino_object_st tree1;
+		dino.bitmap = tree1_bmp;
+		dino.width = TREE1_WIDTH;
+		dino.height = TREE1_HEIGHT;
+		dino.x = TREE1_SPAWN_X;
+		dino.y = TREE_Y;
 
-		if (dino_state == Dino_Jumping)
+		dino_object_st tree2;
+		dino.bitmap = tree2_bmp;
+		dino.width = TREE2_WIDTH;
+		dino.height = TREE2_HEIGHT;
+		dino.x = TREE2_SPAWN_X;
+		dino.y = TREE_Y;
+
+		int16_t tree1_x = TREE1_SPAWN_X; // TODO get rid of that variables
+		int16_t tree2_x = TREE2_SPAWN_X;
+		uint8_t tree1_type = get_random_val(1);
+		uint8_t tree2_type = get_random_val(1);
+
+		uint8_t dino_state = Dino_Running;
+
+		uint16_t score = 0;
+		TimerTick = 0;
+		while (true)
 		{
-			dino.y--; // 0 is top of the OLED
-			if (dino.y == (DINO_SPAWN_Y - DINO_JUMP_HEIGHT))
+			buttons_updateAll();
+			ssd1306_Fill(Black);
+			score = TimerTick;
+
+			if (BUTTON_UP_IS_PRESSED && dino_state == Dino_Running)
 			{
-				dino_state = Dino_Falling;
+				dino_state = Dino_Jumping;
 			}
-		}
-		else if (dino_state == Dino_Falling)
-		{
-			dino.y++;
-			if (dino.y == DINO_SPAWN_Y)
+
+			if (dino_state == Dino_Jumping)
 			{
-				dino_state = 0;
+				dino.y--; // 0 is top of the OLED
+				if (dino.y == (DINO_SPAWN_Y - DINO_JUMP_HEIGHT))
+				{
+					dino_state = Dino_Falling;
+				}
 			}
-		}
-
-		if (tree1_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree1_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
-		{
-			if (dino.y >= (DINO_SPAWN_Y - 3))
+			else if (dino_state == Dino_Falling)
 			{
-				// Collision Happened
-				break;
+				dino.y++;
+				if (dino.y == DINO_SPAWN_Y)
+				{
+					dino_state = 0;
+				}
 			}
-		}
 
-		if (tree2_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree2_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
-		{
-			if (dino.y >= (DINO_SPAWN_Y - 3))
+			if (tree1_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree1_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
 			{
-				// Collision Happened
-				break;
+				if (dino.y >= (DINO_SPAWN_Y - 3))
+				{
+					// Collision Happened
+					break;
+				}
 			}
+
+			if (tree2_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree2_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
+			{
+				if (dino.y >= (DINO_SPAWN_Y - 3))
+				{
+					// Collision Happened
+					break;
+				}
+			}
+
+			dino_displayScore(score);
+			dino_moveTree(tree1_x, tree1_type);
+			dino_moveTree(tree2_x, tree2_type);
+			dino_moveDino(dino.y);
+
+			// display.drawLine(0, 54, 127, 54, SSD1306_WHITE); TODO CHECK WHAT IS THIS
+			// ssd1306_DrawRectangle(0, 54, 128, 54, White);
+
+			tree1_x--;
+			tree2_x--;
+			if (tree1_x == 0)
+			{
+				tree1_x = TREE1_SPAWN_X;
+				tree1_type = get_random_val(1);
+			}
+
+			if (tree2_x == 0)
+			{
+				tree2_x = TREE2_SPAWN_X;
+				tree2_type = get_random_val(1);
+			}
+			ssd1306_UpdateScreen();
 		}
-
-		dino_displayScore(score);
-		dino_moveTree(tree1_x, tree1_type);
-		dino_moveTree(tree2_x, tree2_type);
-		dino_moveDino(dino.y);
-
-		// display.drawLine(0, 54, 127, 54, SSD1306_WHITE); TODO CHECK WHAT IS THIS
-		// ssd1306_DrawRectangle(0, 54, 128, 54, White);
-
-		tree1_x--;
-		tree2_x--;
-		if (tree1_x == 0)
+		if (game_over(score, Game_Dino))
 		{
-			tree1_x = TREE1_SPAWN_X;
-			tree1_type = get_random_val(1);
+			break;
 		}
-
-		if (tree2_x == 0)
-		{
-			tree2_x = TREE2_SPAWN_X;
-			tree2_type = get_random_val(1);
-		}
-		ssd1306_UpdateScreen();
 	}
-	game_over(score, Game_Dino);
 }

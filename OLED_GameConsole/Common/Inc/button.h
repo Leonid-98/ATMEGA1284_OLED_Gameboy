@@ -18,10 +18,10 @@
 #define BUTTON_3_PIN 				7
 #define BUTTON_4_PIN 				6
 
-#define BUTTON_A_IS_PRESSED			// TODO define 
-#define BUTTON_B_IS_PRESSED
-#define BUTTON_UP_IS_PRESSED
-#define BUTTON_DOWN_IS_PRESSED
+#define BUTTON_A_IS_PRESSED			button_getState1() == Button_Falling
+#define BUTTON_B_IS_PRESSED			button_getState3() == Button_Falling
+#define BUTTON_UP_IS_PRESSED		button_getState2() == Button_Falling
+#define BUTTON_DOWN_IS_PRESSED		button_getState4() == Button_Falling
 
 typedef enum
 {

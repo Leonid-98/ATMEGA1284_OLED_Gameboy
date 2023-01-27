@@ -132,6 +132,7 @@
       <Value>../Drivers/ssd1306/Inc</Value>
       <Value>../Common/Inc</Value>
       <Value>../Games/Inc</Value>
+      <Value>../Music/Inc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize most (-O3)</avrgcc.compiler.optimization.level>
@@ -219,6 +220,12 @@
     <Compile Include="Games\Src\game.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Music\Inc\notes.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Music\Inc\song_lose.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\Inc" />
@@ -234,6 +241,9 @@
     <Folder Include="Games" />
     <Folder Include="Games\Inc" />
     <Folder Include="Games\Src" />
+    <Folder Include="Music" />
+    <Folder Include="Music\Inc" />
+    <Folder Include="Music\Src" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

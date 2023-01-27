@@ -38,6 +38,48 @@ uint8_t get_random_val(uint8_t n);
 #define SELECTOR_LINE3_Y_START 49
 #define SELECTOR_LINE3_Y_END 62
 
+// !========================
+/*
+#include "notes.h"
+#include "song_lose.h"
+
+volatile uint16_t i = 0;
+const uint16_t lenMelody1 = sizeof(melody) / sizeof(melody[0]);
+uint16_t scaleDelay(uint16_t delayMs)
+{
+	return (delayMs - delayMs / 32 + delayMs / 128);
+}
+
+uint16_t freqToDelay(uint16_t freq)
+{
+	return F_CPU / freq / 2;
+}
+
+int16_t myAbs(int16_t v)
+{
+	return v * ((v > 0) - (v < 0));
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+	// fast timer, freq generator
+	// PINB = 1 << PORTB6;
+	PIND = 1 << PIND5;
+}
+
+ISR(TIMER3_COMPA_vect)
+{
+	// slow timer, tone changer
+	TCNT3 = 0;
+	i += 2;
+	if (i > lenMelody1)
+	{
+		i = 0;
+	}
+}
+*/
+// !========================
+
 int main(void)
 {
 	// ENABLE_DEBUG_LED;
@@ -47,9 +89,48 @@ int main(void)
 	button_init();
 	ssd1306_Init();
 	buttons_updateAll();
-	sei();
+	// sei();
+
+	// ! ==============
+	/*
+	// TIMER1, sound generator, fast timer
+	TCCR1A = (1 << WGM10) | (1 << WGM11);
+	TCCR1B = (1 << WGM12) | (1 << WGM13) | (1 << CS10);
+	TIMSK1 = 1 << OCIE1A; // interrupt en
+
+	// TIMER3, tone changer, slow timer
+	TCCR3A = (0 << WGM30) | (0 << WGM31);
+	TCCR3B = (0 << WGM32) | (0 << WGM33) | (1 << CS32) | (0 << CS31) | (1 << CS30);
+	TIMSK3 = 1 << OCIE3A; // interrupt en
+
+	// buzzer init
+	DDRD = 0xFF;
+	PORTD |= 1 << PORTD5;
+
+	while (true)
+	{
+		// freq selector
+		if (melody[i])
+		{
+			TIMSK1 |= 1 << OCIE1A;
+			OCR1A = freqToDelay(melody[i]);
+		}
+		else
+		{
+			TIMSK1 |= 0 << OCIE1A;
+		}
+
+		// note selector
+		int16_t lenNote = (240000 / tempo) / myAbs(melody[i + 1]) * 2;
+		if (melody[i + 1] < 0)
+			lenNote *= 1.5;
+		OCR3A = scaleDelay(lenNote);
+	}
+	*/
+	// !============================
+
 	game_selected_e selected_game;
-	while (1)
+	while (true)
 	{
 		selected_game = game_mainMenuLoop();
 		switch (selected_game)
@@ -82,7 +163,7 @@ void debug_mainloop(void)
 	static char buff3[20];
 
 	ssd1306_Fill(Black);
-	while (1)
+	while (true)
 	{
 		buttons_updateAll();
 
@@ -103,12 +184,12 @@ void debug_mainloop(void)
 		ssd1306_WriteString(buff3, Font_6x8, White);
 
 		ssd1306_SetCursor(64, 50);
-		ssd1306_WriteString("exit: A+B", Font_6x8, White);
-		
+		ssd1306_WriteString("UP + DOWN", Font_6x8, White);
+
 		ssd1306_SetCursor(64, 30);
 		ssd1306_WriteString("clr score:", Font_6x8, White);
 		ssd1306_SetCursor(64, 40);
-		ssd1306_WriteString("^ + v", Font_6x8, White);
+		ssd1306_WriteString("exit: A+B", Font_6x8, White);
 
 		ssd1306_FillCircle(10, 35, 5, White);
 		ssd1306_FillCircle(25, 35, 5, White);
@@ -119,13 +200,12 @@ void debug_mainloop(void)
 		(button_getState2() == Button_Down) ? ssd1306_FillCircle(25, 35, 4, White) : ssd1306_FillCircle(25, 35, 4, Black);
 		(button_getState3() == Button_Down) ? ssd1306_FillCircle(10, 50, 4, White) : ssd1306_FillCircle(10, 50, 4, Black);
 		(button_getState4() == Button_Down) ? ssd1306_FillCircle(25, 50, 4, White) : ssd1306_FillCircle(25, 50, 4, Black);
-		
+
 		if (button_getState1() == Button_Down && button_getState3() == Button_Down)
 		{
 			game_clearAllScores();
 		}
-		
-		
+
 		if (button_getState2() == Button_Down && button_getState4() == Button_Down)
 		{
 			break;
