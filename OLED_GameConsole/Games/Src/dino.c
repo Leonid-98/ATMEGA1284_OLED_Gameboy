@@ -9,7 +9,7 @@
 
 #include "game.h"
 #include "dino.h"
-#include "timer.h"
+#include "timer_tick.h"
 #include "button.h"
 #include "ssd1306.h"
 

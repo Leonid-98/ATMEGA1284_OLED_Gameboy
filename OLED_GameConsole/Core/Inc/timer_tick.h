@@ -4,6 +4,6 @@
  *  Author: Leonid T?igrinski
  */
 
-void timer_init(void);
+void timer0_init(void);
 
 extern volatile uint16_t TimerTick;

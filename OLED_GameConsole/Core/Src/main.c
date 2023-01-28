@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 #include "main.h"
-#include "timer.h"
+#include "timer_tick.h"
 #include "button.h"
 #include "ssd1306.h"
 #include "joystcik.h"
@@ -21,22 +21,6 @@
 void debug_mainloop(void);
 void init_random_seed(void);
 uint8_t get_random_val(uint8_t n);
-
-#define MENU_LINE_X 5
-#define MENU_LINE0_Y 3
-#define MENU_LINE1_Y 24
-#define MENU_LINE2_Y 38
-#define MENU_LINE3_Y 51
-
-#define SELECTOR_X_START 3
-#define SELECTOR_X_END 125
-
-#define SELECTOR_LINE1_Y_START 22
-#define SELECTOR_LINE1_Y_END 34
-#define SELECTOR_LINE2_Y_START 35
-#define SELECTOR_LINE2_Y_END 48
-#define SELECTOR_LINE3_Y_START 49
-#define SELECTOR_LINE3_Y_END 62
 
 // !========================
 /*
@@ -83,15 +67,15 @@ ISR(TIMER3_COMPA_vect)
 int main(void)
 {
 	// ENABLE_DEBUG_LED;
-	timer_init();
+	timer0_init();
 	joystick_init();
 	init_random_seed();
 	button_init();
 	ssd1306_Init();
 	buttons_updateAll();
-	// sei();
+	sei();
 
-	// ! ==============
+	// ! ==================
 	/*
 	// TIMER1, sound generator, fast timer
 	TCCR1A = (1 << WGM10) | (1 << WGM11);
@@ -127,7 +111,7 @@ int main(void)
 		OCR3A = scaleDelay(lenNote);
 	}
 	*/
-	// !============================
+	// !===================
 
 	game_selected_e selected_game;
 	while (true)

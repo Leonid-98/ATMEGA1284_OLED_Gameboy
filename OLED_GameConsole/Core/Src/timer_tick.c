@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <avr/interrupt.h>
-#include "timer.h"
+#include "timer_tick.h"
 
 volatile uint16_t TimerTick = 0;
 
@@ -21,7 +21,7 @@ ISR(TIMER0_OVF_vect)
     }
 }
 
-void timer_init(void)
+void timer0_init(void)
 {
 	TCCR0A = 0;
 	TCCR0B = (1 << CS02) | (0 << CS01) | (1 << CS00);
