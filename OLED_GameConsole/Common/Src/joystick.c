@@ -15,10 +15,10 @@ void joystick_init(void)
 
 uint16_t joystcik_getX(void)
 {
-	return JOYSTICK_X_MAX - adc_read(MUX0);
+	return JOYSTICK_X_MAX - adc_read(MUX1);
 }
 
 uint16_t joystcik_getY(void)
 {
-	return adc_read(MUX1);
+	return adc_read(MUX0);
 }

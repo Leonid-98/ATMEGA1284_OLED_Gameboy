@@ -23,6 +23,11 @@
 #define BUTTON_UP_IS_PRESSED		button_getState2() == Button_Falling
 #define BUTTON_DOWN_IS_PRESSED		button_getState4() == Button_Falling
 
+#define BUTTON_A_IS_HOLD			!((BUTTON_PIN & (1 << BUTTON_1_PIN)) >> BUTTON_1_PIN)
+#define BUTTON_B_IS_HOLD			!((BUTTON_PIN & (1 << BUTTON_3_PIN)) >> BUTTON_3_PIN)
+#define BUTTON_UP_IS_HOLD			!((BUTTON_PIN & (1 << BUTTON_2_PIN)) >> BUTTON_2_PIN)
+#define BUTTON_DOWN_IS_HOLD			!((BUTTON_PIN & (1 << BUTTON_4_PIN)) >> BUTTON_4_PIN)
+
 typedef enum
 {
 	Active = 0,

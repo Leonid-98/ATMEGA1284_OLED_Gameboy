@@ -17,12 +17,13 @@
 
 #include "game.h"
 #include "dino.h"
+#include "pong.h"
 
 void debug_mainloop(void);
 void init_random_seed(void);
 uint8_t get_random_val(uint8_t n);
 
-// !========================
+// ! TIMER
 /*
 #include "notes.h"
 #include "song_lose.h"
@@ -62,7 +63,7 @@ ISR(TIMER3_COMPA_vect)
 	}
 }
 */
-// !========================
+// ! TIMER
 
 int main(void)
 {
@@ -75,7 +76,7 @@ int main(void)
 	buttons_updateAll();
 	sei();
 
-	// ! ==================
+	// ! TIMER
 	/*
 	// TIMER1, sound generator, fast timer
 	TCCR1A = (1 << WGM10) | (1 << WGM11);
@@ -111,7 +112,7 @@ int main(void)
 		OCR3A = scaleDelay(lenNote);
 	}
 	*/
-	// !===================
+	// ! TIMER
 
 	game_selected_e selected_game;
 	while (true)
@@ -126,7 +127,7 @@ int main(void)
 			ssd1306_FillCircle(4, 34, 2, White);
 			break;
 		case Game_Pong:
-			ssd1306_FillCircle(4, 44, 2, White);
+			pong_gameloop();
 			break;
 		case Game_Debug:
 			debug_mainloop();
