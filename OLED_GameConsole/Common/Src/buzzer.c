@@ -24,7 +24,7 @@ static void priv_stopTimers(void);
 ISR(TIMER1_COMPA_vect)
 {
 
-    PIND = 1 << PIND5;
+    BUZZER_PIN_REG = 1 << BUZZER_PIN;
 }
 
 /**
@@ -67,8 +67,8 @@ static void priv_stopTimers(void)
 
 void buzzer_init(void)
 {
-    BUZZER_DDR |= 1 << BUZZER_PIN;
-    BUZZER_PORT |= 1 << BUZZER_PIN;
+    BUZZER_DDR_REG |= 1 << BUZZER_PIN;
+    BUZZER_PORT_REG |= 1 << BUZZER_PIN;
 }
 
 void buzzer_play_music(void)
