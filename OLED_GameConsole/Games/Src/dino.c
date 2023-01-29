@@ -88,8 +88,8 @@ void dino_gameloop()
 
 		int16_t tree1_x = TREE1_SPAWN_X; // TODO get rid of that variables
 		int16_t tree2_x = TREE2_SPAWN_X;
-		uint8_t tree1_type = get_random_val(1);
-		uint8_t tree2_type = get_random_val(1);
+		uint8_t tree1_type = random_getVal(0, 1);
+		uint8_t tree2_type = random_getVal(0, 1);
 
 		uint8_t dino_state = Dino_Running;
 
@@ -154,13 +154,13 @@ void dino_gameloop()
 			if (tree1_x == 0)
 			{
 				tree1_x = TREE1_SPAWN_X;
-				tree1_type = get_random_val(1);
+				tree1_type = random_getVal(0, 1);
 			}
 
 			if (tree2_x == 0)
 			{
 				tree2_x = TREE2_SPAWN_X;
-				tree2_type = get_random_val(1);
+				tree2_type = random_getVal(0, 1);
 			}
 			ssd1306_UpdateScreen();
 		}

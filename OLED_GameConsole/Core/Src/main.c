@@ -11,6 +11,7 @@
 
 #include "main.h"
 #include "timer_tick.h"
+#include "random.h"
 #include "button.h"
 #include "ssd1306.h"
 #include "joystcik.h"
@@ -21,8 +22,6 @@
 #include "snake.h"
 
 void debug_mainloop(void);
-void init_random_seed(void);
-uint8_t get_random_val(uint8_t n);
 
 // ! TIMER
 /*
@@ -71,7 +70,7 @@ int main(void)
 	// ENABLE_DEBUG_LED;
 	timer0_init();
 	joystick_init();
-	init_random_seed();
+	random_init();
 	button_init();
 	ssd1306_Init();
 	buttons_updateAll();
@@ -114,8 +113,6 @@ int main(void)
 	}
 	*/
 	// ! TIMER
-
-	snake_gameloop();
 
 	game_selected_e selected_game;
 	while (true)
@@ -163,7 +160,7 @@ void debug_mainloop(void)
 		ssd1306_SetCursor(0, 12);
 		ssd1306_WriteString(buff1, Font_6x8, White);
 
-		snprintf(buff2, 20, "Random: %d   ", get_random_val(10));
+		snprintf(buff2, 20, "Random: %d   ", random_getVal(0, 128));
 		ssd1306_SetCursor(64, 2);
 		ssd1306_WriteString(buff2, Font_6x8, White);
 
@@ -201,14 +198,4 @@ void debug_mainloop(void)
 
 		ssd1306_UpdateScreen();
 	}
-}
-
-void init_random_seed(void)
-{
-	srand(joystcik_getY());
-}
-
-uint8_t get_random_val(uint8_t n)
-{
-	return rand() % (n + 1);
 }

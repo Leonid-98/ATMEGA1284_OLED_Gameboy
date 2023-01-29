@@ -181,6 +181,9 @@
     <Compile Include="Core\Inc\main.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Core\Inc\random.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Core\Inc\timer_tick.h">
       <SubType>compile</SubType>
     </Compile>
@@ -191,6 +194,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Core\Src\main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Core\Src\random.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Core\Src\timer_tick.c">

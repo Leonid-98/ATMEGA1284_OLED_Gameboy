@@ -1,4 +1,5 @@
 #include "pong.h"
+#include "game.h"
 #include "button.h"
 #include "joystcik.h"
 #include "timer_tick.h"
@@ -51,72 +52,79 @@ void pong_checkForCollision(void)
 
 void pong_gameloop(void)
 {
-    ssd1306_Fill(Black);
-
-    char buff0[20];
-    snprintf(buff0, 20, "Score: %d   ", TimerTick);
-    ssd1306_SetCursor(42, 0);
-    ssd1306_WriteString(buff0, Font_6x8, White);
-
-    // ssd1306_DrawRectangle(PONG_FIELD_X0, PONG_FIELD_Y0, PONG_FIELD_X1, PONG_FIELD_Y1, White);
-    ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
-    ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
-    ssd1306_FillRectangle(ball.x, ball.y, ball.x + ball.size, ball.y + ball.size, Black);
-    ssd1306_UpdateScreen();
-    while (1)
+    while (true)
     {
+        ssd1306_Fill(Black);
+
+        char buff0[20];
+        snprintf(buff0, 20, "Score: %d   ", TimerTick);
+        ssd1306_SetCursor(42, 0);
+        ssd1306_WriteString(buff0, Font_6x8, White);
+
+        // ssd1306_DrawRectangle(PONG_FIELD_X0, PONG_FIELD_Y0, PONG_FIELD_X1, PONG_FIELD_Y1, White);
+        ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
+        ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
         ssd1306_FillRectangle(ball.x, ball.y, ball.x + ball.size, ball.y + ball.size, Black);
-        pong_moveBall(&ball);
-        ssd1306_FillRectangle(ball.x, ball.y, ball.x + ball.size, ball.y + ball.size, White);
         ssd1306_UpdateScreen();
-        pong_checkForCollision();
+        while (1)
+        {
+            ssd1306_FillRectangle(ball.x, ball.y, ball.x + ball.size, ball.y + ball.size, Black);
+            pong_moveBall(&ball);
+            ssd1306_FillRectangle(ball.x, ball.y, ball.x + ball.size, ball.y + ball.size, White);
+            ssd1306_UpdateScreen();
+            pong_checkForCollision();
 
-        if (BUTTON_DOWN_IS_HOLD)
-        {
-            ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, Black);
-            pong_movePaddle(&player2, Paddle_Down);
-            ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
-        }
-        else if (BUTTON_UP_IS_HOLD)
-        {
-            ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, Black);
-            pong_movePaddle(&player2, Paddle_Up);
-            ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
-        }
+            if (BUTTON_DOWN_IS_HOLD)
+            {
+                ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, Black);
+                pong_movePaddle(&player2, Paddle_Down);
+                ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
+            }
+            else if (BUTTON_UP_IS_HOLD)
+            {
+                ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, Black);
+                pong_movePaddle(&player2, Paddle_Up);
+                ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
+            }
 
-        // Using X axis, because OLED is mirrored, Y became X
-        if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET)
-        {
-            ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
-            pong_movePaddle(&player1, Paddle_Up);
-            ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
-        }
-        else if (joystcik_getX() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET)
-        {
-            ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
-            pong_movePaddle(&player1, Paddle_Down);
-            ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
-        }
+            // Using X axis, because OLED is mirrored, Y became X
+            if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET)
+            {
+                ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
+                pong_movePaddle(&player1, Paddle_Up);
+                ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
+            }
+            else if (joystcik_getX() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET)
+            {
+                ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
+                pong_movePaddle(&player1, Paddle_Down);
+                ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
+            }
 
-        if (player1.isLost)
+            if (player1.isLost)
+            {
+                // ssd1306_SetCursor(10, 15);
+                // ssd1306_WriteString("Player 1 lost", Font_6x8, White);
+                // ssd1306_UpdateScreen();
+                // while (1)
+                //     ;
+                break;
+            }
+            if (player2.isLost)
+            {
+                // ssd1306_SetCursor(10, 15);
+                // ssd1306_WriteString("Player 2 lost", Font_6x8, White);
+                // ssd1306_UpdateScreen();
+                // while (1)
+                //     ;
+                break;
+            }
+
+            // _delay_ms(5);
+        }
+        if (game_over(1, Game_Pong)) // TODO add score
         {
-            // ssd1306_SetCursor(10, 15);
-            // ssd1306_WriteString("Player 1 lost", Font_6x8, White);
-            // ssd1306_UpdateScreen();
-            // while (1)
-            //     ;
             break;
         }
-        if (player2.isLost)
-        {
-            // ssd1306_SetCursor(10, 15);
-            // ssd1306_WriteString("Player 2 lost", Font_6x8, White);
-            // ssd1306_UpdateScreen();
-            // while (1)
-            //     ;
-            break;
-        }
-
-        // _delay_ms(5);
     }
 }

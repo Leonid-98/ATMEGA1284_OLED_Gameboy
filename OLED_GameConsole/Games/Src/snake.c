@@ -1,6 +1,7 @@
 
 
 #include "snake.h"
+#include "game.h"
 #include "ssd1306.h"
 #include "joystcik.h"
 
@@ -80,9 +81,10 @@ void snake_moveByJoystick(void)
 
 void snake_gameloop()
 {
-    while (1)
+    while (true)
     {
-        while (1)
+        // TODO Init snake game again
+        while (true)
         {
             buttons_updateAll();
 
@@ -129,6 +131,10 @@ void snake_gameloop()
             }
 
             ssd1306_UpdateScreen();
+        }
+        if (game_over(1, Game_Snake)) // TODO add score
+        {
+            break;
         }
     }
 }
