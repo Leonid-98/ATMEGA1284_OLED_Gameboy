@@ -1,5 +1,5 @@
 /*
- * timer.h
+ * timer_tick.h
  *
  *  Author: Leonid T?igrinski
  */

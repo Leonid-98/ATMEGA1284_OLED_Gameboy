@@ -1,7 +1,6 @@
 /*
  * twi_master.c
  *
- * Created: 09-Jun-19 11:20:17 AM
  *  Author: Leonid Tsigrinski
  */
 

@@ -28,12 +28,12 @@
 #define BASE_LINE_X1        127
 #define BASE_LINE_Y1        54
 
-enum
+typedef enum
 {
     Dino_Running,
     Dino_Jumping,
     Dino_Falling
-};
+} dino_state_e;
 
 struct dino_object_st
 {

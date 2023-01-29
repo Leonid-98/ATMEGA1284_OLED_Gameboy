@@ -2,7 +2,7 @@
  * song_lose.h
  *
  * Created: 27.01.2023 23:19:45
- *  Author: msi
+ *  Author: Leonid Tsigrinski
  */ 
 
 

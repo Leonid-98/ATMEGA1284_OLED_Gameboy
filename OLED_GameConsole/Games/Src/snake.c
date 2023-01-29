@@ -7,12 +7,12 @@
 #include "timer_tick.h"
 #include "random.h"
 
-static void priv_drawSnake(struct snake *snake);
-static void priv_drawFood(struct snake_food *food);
-static void snake_movePixels(struct snake *snake);
+static void priv_drawSnake(struct snake_st *snake);
+static void priv_drawFood(struct snake_food_st *food);
+static void snake_movePixels(struct snake_st *snake);
 static void priv_displayScore(uint16_t score);
 
-void priv_drawSnake(struct snake *snake)
+void priv_drawSnake(struct snake_st *snake)
 {
     for (uint8_t i = 0; i < snake->size; i++)
     {
@@ -20,12 +20,12 @@ void priv_drawSnake(struct snake *snake)
     }
 }
 
-void priv_drawFood(struct snake_food *food)
+void priv_drawFood(struct snake_food_st *food)
 {
     ssd1306_FillRectangle(food->x, food->y, food->x + SNAKE_SIZE, food->y + SNAKE_SIZE, White);
 }
 
-void snake_movePixels(struct snake *snake)
+void snake_movePixels(struct snake_st *snake)
 {
     for (uint8_t node_idx = 0; node_idx < snake->size - 1; node_idx++)
     {
@@ -66,8 +66,8 @@ void snake_gameloop()
 {
     while (true)
     {
-        struct snake snake = {{SNAKE_SPAWN_X}, {30}, 1, Snake_Right};
-        struct snake_food food = {64, 32};
+        struct snake_st snake = {{SNAKE_SPAWN_X}, {30}, 1, Snake_Right};
+        struct snake_food_st food = {64, 32};
 
         uint16_t score = 0;
         TimerTick = 0;

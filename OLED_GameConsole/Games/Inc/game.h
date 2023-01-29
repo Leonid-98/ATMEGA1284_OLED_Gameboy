@@ -32,11 +32,11 @@ typedef enum
 } game_selected_e;
 
 // EEPROM
-void game_writeScore(uint16_t new_score, uint8_t game);
-uint16_t game_readScore(uint8_t game);
+void game_writeScore(uint16_t new_score, game_selected_e game);
+uint16_t game_readScore(game_selected_e game);
 void game_clearAllScores(void);
 
-bool game_over(uint16_t score, uint8_t game);
+bool game_over(uint16_t score, game_selected_e game);
 game_selected_e game_mainMenuLoop();
 
 extern const uint8_t game_over_bmp[];

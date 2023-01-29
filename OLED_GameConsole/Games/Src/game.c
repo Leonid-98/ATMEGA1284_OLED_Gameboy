@@ -135,7 +135,7 @@ static void priv_drawMainMenu(game_selected_e selected_game)
 	buff[0] = '\0';
 }
 
-void game_writeScore(uint16_t new_score, uint8_t game)
+void game_writeScore(uint16_t new_score, game_selected_e game)
 {
 	switch (game)
 	{
@@ -153,7 +153,7 @@ void game_writeScore(uint16_t new_score, uint8_t game)
 	}
 }
 
-uint16_t game_readScore(uint8_t game)
+uint16_t game_readScore(game_selected_e game)
 {
 	switch (game)
 	{
@@ -175,7 +175,7 @@ void game_clearAllScores(void)
 	eeprom_write_word(GAME_PONG_ADDR, 0);
 }
 
-bool game_over(uint16_t score, uint8_t game)
+bool game_over(uint16_t score, game_selected_e game)
 {
 	static char buff[20];
 	uint8_t score_pos_x;

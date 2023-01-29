@@ -1,8 +1,8 @@
 /*
- * joy.h
+ * joystick.h
  *
  * Created: 16.01.2023 4:07:41
- *  Author: msi
+ *  Author: Leonid Tsigrinski
  */ 
 
 

@@ -2,7 +2,7 @@
  * notes.h
  *
  * Created: 27.01.2023 23:17:38
- *  Author: msi
+ *  Author: Leonid Tsigrinski
  */ 
 
 #ifndef NOTES_H_

@@ -40,11 +40,11 @@ struct ball
     uint8_t size;
 };
 
-enum
+typedef enum
 {
     Paddle_Up,
     Paddle_Down
-};
+} paddle_dir_e;
 
 void pong_gameloop(void);
 

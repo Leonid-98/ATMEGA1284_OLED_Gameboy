@@ -15,23 +15,23 @@
 #define SNAKE_SPAWN_SIZE    3
 #define SNAKE_SCORE_X       32
 
-enum snake_dir
+typedef enum
 {
     Snake_Left,
     Snake_Right,
     Snake_Up,
     Snake_Down
-};
+} snake_dir_e;
 
-struct snake
+struct snake_st
 {
     int16_t x[200];
     int16_t y[200];
     uint8_t size;
-    enum snake_dir dir;
+    snake_dir_e dir;
 };
 
-struct snake_food
+struct snake_food_st
 {
     uint8_t x;
     uint8_t y;

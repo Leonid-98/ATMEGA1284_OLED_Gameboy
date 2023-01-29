@@ -79,7 +79,7 @@ void dino_gameloop()
 		tree2.y = TREE_Y;
 		tree2.type = random_randint(0, 1);
 
-		uint8_t dino_state = Dino_Running;
+		dino_state_e dino_state = Dino_Running;
 
 		uint16_t score = 0;
 		TimerTick = 0;

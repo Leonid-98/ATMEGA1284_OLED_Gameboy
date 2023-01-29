@@ -6,7 +6,7 @@
 #include "random.h"
 
 static void priv_moveBall(struct ball *ball);
-static void priv_movePaddle(struct paddle *paddle, uint8_t direction);
+static void priv_movePaddle(struct paddle *paddle, paddle_dir_e direction);
 static void priv_displayScore(uint16_t score);
 static priv_initGame(struct ball *ball, struct paddle *player1, struct paddle *player2);
 
@@ -30,7 +30,7 @@ static void priv_moveBall(struct ball *ball)
     ssd1306_FillRectangle(ball->x, ball->y, ball->x + ball->size, ball->y + ball->size, White);
 }
 
-static void priv_movePaddle(struct paddle *paddle, uint8_t direction)
+static void priv_movePaddle(struct paddle *paddle, paddle_dir_e direction)
 {
     ssd1306_FillRectangle(paddle->x, paddle->y, paddle->x + paddle->width, paddle->y + paddle->height, Black);
 

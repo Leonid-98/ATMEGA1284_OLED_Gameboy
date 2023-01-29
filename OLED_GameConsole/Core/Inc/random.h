@@ -2,7 +2,7 @@
  * random.h
  *
  * Created: 29.01.2023 16:45:22
- *  Author: msi
+ *  Author: Leonid Tsigrinski
  */ 
 
 
