@@ -2,7 +2,7 @@
  * twi_master.c
  *
  * Created: 09-Jun-19 11:20:17 AM
- *  Author: TEP SOVICHEA
+ *  Author: Leonid Tsigrinski
  */
 
 #include "twi_master.h"

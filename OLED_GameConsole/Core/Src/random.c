@@ -2,7 +2,7 @@
  * random.c
  *
  * Created: 29.01.2023 16:45:09
- *  Author: msi
+ *  Author: Leonid Tsigrinski
  */
 #include <avr/io.h>
 
