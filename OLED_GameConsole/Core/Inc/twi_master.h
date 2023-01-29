@@ -15,14 +15,10 @@
 
 #include "main.h"
 
-#define SUCCESS 0
-
-#define TW_SCL_PIN PORTC0
-#define TW_SDA_PIN PORTC1
-
-#define TW_BAUDRATE 400000
-
-#define TW_SLA_W(ADDR) ((ADDR << 1) | TW_WRITE)
+#define TW_SCL_PIN          PORTC0
+#define TW_SDA_PIN          PORTC1
+#define TW_BAUDRATE         400000
+#define TW_SLA_W(ADDR)      ((ADDR << 1) | TW_WRITE)
 
 void tw_init();
 void tw_start(void);
