@@ -7,8 +7,6 @@ struct paddle player1 = {0, 20, 4, 16};
 struct paddle player2 = {123, 25, 4, 16};
 struct ball ball = {64, 32, 1, 1, 1};
 
-
-
 // Function to move the ball
 void pong_moveBall(struct ball *ball)
 {
@@ -54,7 +52,7 @@ void pong_checkForCollision(void)
 void pong_gameloop(void)
 {
     ssd1306_Fill(Black);
-    
+
     char buff0[20];
     snprintf(buff0, 20, "Score: %d   ", TimerTick);
     ssd1306_SetCursor(42, 0);
@@ -86,13 +84,14 @@ void pong_gameloop(void)
             ssd1306_FillRectangle(player2.x, player2.y, player2.x + player2.width, player2.y + player2.height, White);
         }
 
-        if (joystcik_getY() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET)
+        // Using X axis, because OLED is mirrored, Y became X
+        if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET)
         {
             ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
             pong_movePaddle(&player1, Paddle_Up);
             ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, White);
         }
-        else if (joystcik_getY() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET)
+        else if (joystcik_getX() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET)
         {
             ssd1306_FillRectangle(player1.x, player1.y, player1.x + player1.width, player1.y + player1.height, Black);
             pong_movePaddle(&player1, Paddle_Down);

@@ -1,5 +1,5 @@
 /*
- * game.h
+ * pong.h
  *
  * Created: 28.01.2023 23:52:01
  *  Author: Leonid Tsigrinski

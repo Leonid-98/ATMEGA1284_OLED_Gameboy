@@ -11,9 +11,9 @@
 
 #include <stdint.h>
 
-#define JOYSTICK_X_MAX				990
+#define JOYSTICK_Y_MAX				990
 #define JOYSTICK_CENTER				480
-#define JOYSTICK_CENTER_OFFSET		200
+#define JOYSTICK_CENTER_OFFSET		250
 
 void joystick_init(void);
 uint16_t joystcik_getX(void);

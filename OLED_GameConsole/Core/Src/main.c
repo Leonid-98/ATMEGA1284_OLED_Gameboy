@@ -18,6 +18,7 @@
 #include "game.h"
 #include "dino.h"
 #include "pong.h"
+#include "snake.h"
 
 void debug_mainloop(void);
 void init_random_seed(void);
@@ -114,6 +115,8 @@ int main(void)
 	*/
 	// ! TIMER
 
+	snake_gameloop();
+
 	game_selected_e selected_game;
 	while (true)
 	{
@@ -124,7 +127,7 @@ int main(void)
 			dino_gameloop();
 			break;
 		case Game_Snake:
-			ssd1306_FillCircle(4, 34, 2, White);
+			snake_gameloop();
 			break;
 		case Game_Pong:
 			pong_gameloop();
