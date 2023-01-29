@@ -4,14 +4,14 @@
  * Created: 20.01.2023 03:41:12
  *  Author: Leonid Tsigrinski
  */
-
-#include <stdbool.h>
+#include <stdio.h>
 
 #include "game.h"
 #include "dino.h"
 #include "timer_tick.h"
 #include "button.h"
 #include "ssd1306.h"
+#include "random.h"
 
 static const uint8_t dino_bmp[] = {
 	// 'dino', 25x26px
@@ -35,28 +35,16 @@ static const uint8_t tree2_bmp[] = {
 	0xf7, 0xce, 0xf7, 0xce, 0xf7, 0xce, 0xf7, 0xde, 0xf7, 0xfe, 0xff, 0xfc, 0x7f, 0xf8, 0x3f, 0xc0,
 	0x07, 0xc0, 0x07, 0xc0, 0x07, 0xc0, 0x07, 0xc0, 0x07, 0xc0, 0x07, 0xc0, 0x0f, 0xc0};
 
-void dino_moveDino(int16_t y)
+static void priv_moveObject(struct dino_object_st *obj)
 {
-	ssd1306_DrawBitmap(DINO_SPAWN_X, y, dino_bmp, DINO_WIDTH, DINO_HEIGHT, White);
+	ssd1306_DrawBitmap(obj->x, obj->y, obj->bitmap, obj->width, obj->height, White);
 }
 
-void dino_moveTree(int16_t x, uint8_t type)
-{
-	if (type == 0)
-	{
-		ssd1306_DrawBitmap(x, TREE_Y, tree1_bmp, TREE1_WIDTH, TREE1_HEIGHT, White);
-	}
-	else if (type == 1)
-	{
-		ssd1306_DrawBitmap(x, TREE_Y, tree2_bmp, TREE2_WIDTH, TREE2_HEIGHT, White);
-	}
-}
-
-void dino_displayScore(uint16_t score)
+static void priv_displayScore(uint16_t score)
 {
 	static char buff[20];
 
-	snprintf(buff, 20, "Score: %d    ", score); // TODO score
+	snprintf(buff, 20, "Score: %d    ", score);
 	ssd1306_SetCursor(50, 10);
 	ssd1306_WriteString(buff, Font_6x8, White);
 }
@@ -65,31 +53,28 @@ void dino_gameloop()
 {
 	while (true)
 	{
-		dino_object_st dino;
+		struct dino_object_st dino;
 		dino.bitmap = dino_bmp;
 		dino.width = DINO_WIDTH;
 		dino.height = DINO_HEIGHT;
 		dino.x = DINO_SPAWN_X;
 		dino.y = DINO_SPAWN_Y;
 
-		dino_object_st tree1;
-		dino.bitmap = tree1_bmp;
-		dino.width = TREE1_WIDTH;
-		dino.height = TREE1_HEIGHT;
-		dino.x = TREE1_SPAWN_X;
-		dino.y = TREE_Y;
+		struct dino_object_st tree1;
+		tree1.bitmap = tree1_bmp;
+		tree1.width = TREE1_WIDTH;
+		tree1.height = TREE1_HEIGHT;
+		tree1.x = TREE1_SPAWN_X;
+		tree1.y = TREE_Y;
+		tree1.type = random_randint(0, 1);
 
-		dino_object_st tree2;
-		dino.bitmap = tree2_bmp;
-		dino.width = TREE2_WIDTH;
-		dino.height = TREE2_HEIGHT;
-		dino.x = TREE2_SPAWN_X;
-		dino.y = TREE_Y;
-
-		int16_t tree1_x = TREE1_SPAWN_X; // TODO get rid of that variables
-		int16_t tree2_x = TREE2_SPAWN_X;
-		uint8_t tree1_type = random_getVal(0, 1);
-		uint8_t tree2_type = random_getVal(0, 1);
+		struct dino_object_st tree2;
+		tree2.bitmap = tree2_bmp;
+		tree2.width = TREE2_WIDTH;
+		tree2.height = TREE2_HEIGHT;
+		tree2.x = TREE2_SPAWN_X;
+		tree2.y = TREE_Y;
+		tree2.type = random_randint(0, 1);
 
 		uint8_t dino_state = Dino_Running;
 
@@ -108,7 +93,8 @@ void dino_gameloop()
 
 			if (dino_state == Dino_Jumping)
 			{
-				dino.y--; // 0 is top of the OLED
+				// 0 is top of the OLED
+				dino.y--;
 				if (dino.y == (DINO_SPAWN_Y - DINO_JUMP_HEIGHT))
 				{
 					dino_state = Dino_Falling;
@@ -123,47 +109,43 @@ void dino_gameloop()
 				}
 			}
 
-			if (tree1_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree1_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
+			if (tree1.x <= (DINO_SPAWN_X + DINO_WIDTH) && tree1.x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
 			{
 				if (dino.y >= (DINO_SPAWN_Y - 3))
 				{
-					// Collision Happened
 					break;
 				}
 			}
 
-			if (tree2_x <= (DINO_SPAWN_X + DINO_WIDTH) && tree2_x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
+			if (tree2.x <= (DINO_SPAWN_X + DINO_WIDTH) && tree2.x >= (DINO_SPAWN_X + (DINO_WIDTH / 2)))
 			{
 				if (dino.y >= (DINO_SPAWN_Y - 3))
 				{
-					// Collision Happened
 					break;
 				}
 			}
 
-			dino_displayScore(score);
-			dino_moveTree(tree1_x, tree1_type);
-			dino_moveTree(tree2_x, tree2_type);
-			dino_moveDino(dino.y);
+			priv_displayScore(score);
+			priv_moveObject(&tree1);
+			priv_moveObject(&tree2);
+			priv_moveObject(&dino);
 
-			// display.drawLine(0, 54, 127, 54, SSD1306_WHITE); TODO CHECK WHAT IS THIS
-			// ssd1306_DrawRectangle(0, 54, 128, 54, White);
-
-			tree1_x--;
-			tree2_x--;
-			if (tree1_x == 0)
+			tree1.x--;
+			tree2.x--;
+			if (tree1.x == 0)
 			{
-				tree1_x = TREE1_SPAWN_X;
-				tree1_type = random_getVal(0, 1);
+				tree1.x = TREE1_SPAWN_X;
+				tree1.type = random_randint(0, 1);
 			}
 
-			if (tree2_x == 0)
+			if (tree2.x == 0)
 			{
-				tree2_x = TREE2_SPAWN_X;
-				tree2_type = random_getVal(0, 1);
+				tree2.x = TREE2_SPAWN_X;
+				tree2.type = random_randint(0, 1);
 			}
 			ssd1306_UpdateScreen();
 		}
+
 		if (game_over(score, Game_Dino))
 		{
 			break;

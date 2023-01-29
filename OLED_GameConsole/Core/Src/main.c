@@ -160,7 +160,7 @@ void debug_mainloop(void)
 		ssd1306_SetCursor(0, 12);
 		ssd1306_WriteString(buff1, Font_6x8, White);
 
-		snprintf(buff2, 20, "Random: %d   ", random_getVal(0, 128));
+		snprintf(buff2, 20, "Random: %d   ", random_randint(0, 128));
 		ssd1306_SetCursor(64, 2);
 		ssd1306_WriteString(buff2, Font_6x8, White);
 

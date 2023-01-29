@@ -16,7 +16,7 @@ void random_init(void)
 /**
  * Random value in interval [a; b]
  */
-uint8_t random_getVal(uint8_t a, uint8_t b)
+uint8_t random_randint(uint8_t a, uint8_t b)
 {
     return rand() % (b - a + 1) + a;
 }

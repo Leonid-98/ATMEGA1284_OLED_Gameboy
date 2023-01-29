@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 void random_init(void);
-uint8_t random_getVal(uint8_t a, uint8_t b);
+uint8_t random_randint(uint8_t a, uint8_t b);
 
 
 #endif /* RANDOM_H_ */
