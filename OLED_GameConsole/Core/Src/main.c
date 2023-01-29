@@ -36,18 +36,6 @@ int main(void)
 	sei();
 	buttons_updateAll();
 
-	char buff[20];
-	uint16_t i = 0;
-	enable_watchdog();
-	while (1)
-	{
-		snprintf(buff, 20, "i: %d   ", i++);
-		ssd1306_SetCursor(0, 0);
-		ssd1306_WriteString(buff, Font_6x8, White);
-		ssd1306_UpdateScreen();
-	}
-	disable_watchdog();
-
 	game_selected_e selected_game;
 	while (true)
 	{
