@@ -24,7 +24,6 @@
 
 void debug_mainloop(void);
 
-
 int main(void)
 {
 	// ENABLE_DEBUG_LED;
@@ -36,14 +35,6 @@ int main(void)
 	buzzer_init();
 	sei();
 	buttons_updateAll();
-
-	buzzer_play_music();
-	buzzer_play_music();
-	buzzer_play_music();
-
-
-	
-	// ! TIMER
 
 	game_selected_e selected_game;
 	while (true)

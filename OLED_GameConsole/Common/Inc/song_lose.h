@@ -20,6 +20,6 @@ const int16_t melody[MELODY_SIZE] = {
 	NOTE_G4,8, NOTE_D4,8, NOTE_E4,-2
 };
 
-const int16_t tempo = 35;
+const int16_t tempo = 70;
 
 #endif /* SONG_LOSE_H_ */

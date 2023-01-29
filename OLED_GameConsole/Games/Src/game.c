@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <avr/eeprom.h>
 
+#include "buzzer.h"
 #include "button.h"
 #include "ssd1306.h"
 #include "game.h"
@@ -214,6 +215,7 @@ bool game_over(uint16_t score, uint8_t game)
 
 	ssd1306_UpdateScreen();
 
+	buzzer_play_music();
 	bool is_game_over;
 	while (1)
 	{
