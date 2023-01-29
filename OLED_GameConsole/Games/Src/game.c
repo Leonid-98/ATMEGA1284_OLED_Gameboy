@@ -5,12 +5,13 @@
  *  Author: msi
  */
 #include <stdio.h>
-
 #include <avr/eeprom.h>
 
 #include "button.h"
 #include "ssd1306.h"
 #include "game.h"
+
+static void priv_drawMainMenu(game_selected_e selected_game);
 
 const uint8_t game_over_bmp[] = {
 	// 'game_over', 128x64px
@@ -79,47 +80,7 @@ const uint8_t game_over_bmp[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-void game_writeScore(uint16_t new_score, uint8_t game)
-{
-	switch (game)
-	{
-	case Game_Dino:
-		eeprom_write_word(GAME_DINO_ADDR, new_score);
-		break;
-	case Game_Snake:
-		eeprom_write_word(GAME_SNAKE_ADDR, new_score);
-		break;
-	case Game_Pong:
-		eeprom_write_word(GAME_PONG_ADDR, new_score);
-		break;
-	default:
-		break;
-	}
-}
-
-uint16_t game_readScore(uint8_t game)
-{
-	switch (game)
-	{
-	case Game_Dino:
-		return eeprom_read_word(GAME_DINO_ADDR);
-	case Game_Snake:
-		return eeprom_read_word(GAME_SNAKE_ADDR);
-	case Game_Pong:
-		return eeprom_read_word(GAME_PONG_ADDR);
-	default:
-		return 1;
-	}
-}
-
-void game_clearAllScores(void)
-{
-	eeprom_write_word(GAME_DINO_ADDR, 0);
-	eeprom_write_word(GAME_SNAKE_ADDR, 0);
-	eeprom_write_word(GAME_PONG_ADDR, 0);
-}
-
-void game_drawMainMenu(game_selected_e selected_game)
+static void priv_drawMainMenu(game_selected_e selected_game)
 {
 	static char buff[20];
 
@@ -173,42 +134,44 @@ void game_drawMainMenu(game_selected_e selected_game)
 	buff[0] = '\0';
 }
 
-game_selected_e game_mainMenuLoop()
+void game_writeScore(uint16_t new_score, uint8_t game)
 {
-	game_selected_e selected_game = Game_Dino;
-
-	ssd1306_Fill(Black);
-	game_drawMainMenu(selected_game);
-	ssd1306_UpdateScreen();
-	while (1)
+	switch (game)
 	{
-		buttons_updateAll();
-
-		if (BUTTON_DOWN_IS_PRESSED)
-		{
-			if (selected_game != Game_Debug) // Last game
-			{
-				selected_game++;
-				game_drawMainMenu(selected_game);
-				ssd1306_UpdateScreen();
-			}
-		}
-
-		if (BUTTON_UP_IS_PRESSED)
-		{
-			if (selected_game != Game_Dino) // First game
-			{
-				selected_game--;
-				game_drawMainMenu(selected_game);
-				ssd1306_UpdateScreen();
-			}
-		}
-
-		if (BUTTON_A_IS_PRESSED)
-		{
-			return selected_game;
-		}
+	case Game_Dino:
+		eeprom_write_word(GAME_DINO_ADDR, new_score);
+		break;
+	case Game_Snake:
+		eeprom_write_word(GAME_SNAKE_ADDR, new_score);
+		break;
+	case Game_Pong:
+		eeprom_write_word(GAME_PONG_ADDR, new_score);
+		break;
+	default:
+		break;
 	}
+}
+
+uint16_t game_readScore(uint8_t game)
+{
+	switch (game)
+	{
+	case Game_Dino:
+		return eeprom_read_word(GAME_DINO_ADDR);
+	case Game_Snake:
+		return eeprom_read_word(GAME_SNAKE_ADDR);
+	case Game_Pong:
+		return eeprom_read_word(GAME_PONG_ADDR);
+	default:
+		return 1;
+	}
+}
+
+void game_clearAllScores(void)
+{
+	eeprom_write_word(GAME_DINO_ADDR, 0);
+	eeprom_write_word(GAME_SNAKE_ADDR, 0);
+	eeprom_write_word(GAME_PONG_ADDR, 0);
 }
 
 bool game_over(uint16_t score, uint8_t game)
@@ -267,4 +230,42 @@ bool game_over(uint16_t score, uint8_t game)
 			return is_game_over;
 		}
 	};
+}
+
+game_selected_e game_mainMenuLoop()
+{
+	game_selected_e selected_game = Game_Dino;
+
+	ssd1306_Fill(Black);
+	priv_drawMainMenu(selected_game);
+	ssd1306_UpdateScreen();
+	while (1)
+	{
+		buttons_updateAll();
+
+		if (BUTTON_DOWN_IS_PRESSED)
+		{
+			if (selected_game != Game_Debug) // Last game
+			{
+				selected_game++;
+				priv_drawMainMenu(selected_game);
+				ssd1306_UpdateScreen();
+			}
+		}
+
+		if (BUTTON_UP_IS_PRESSED)
+		{
+			if (selected_game != Game_Dino) // First game
+			{
+				selected_game--;
+				priv_drawMainMenu(selected_game);
+				ssd1306_UpdateScreen();
+			}
+		}
+
+		if (BUTTON_A_IS_PRESSED)
+		{
+			return selected_game;
+		}
+	}
 }

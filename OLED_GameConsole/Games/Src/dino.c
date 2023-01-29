@@ -13,6 +13,9 @@
 #include "ssd1306.h"
 #include "random.h"
 
+static void priv_moveObject(struct dino_object_st *obj);
+static void priv_displayScore(uint16_t score);
+
 static const uint8_t dino_bmp[] = {
 	// 'dino', 25x26px
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xfe, 0x00, 0x00, 0x06, 0xff, 0x00, 0x00, 0x0e, 0xff, 0x00,
