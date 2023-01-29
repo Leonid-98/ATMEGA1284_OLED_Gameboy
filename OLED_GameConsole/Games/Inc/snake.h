@@ -23,7 +23,7 @@ enum snake_dir
     Snake_Down
 };
 
-struct snake_st
+struct snake
 {
     int16_t x[200];
     int16_t y[200];
@@ -31,7 +31,7 @@ struct snake_st
     enum snake_dir dir;
 };
 
-struct snake_food_st
+struct snake_food
 {
     uint8_t x;
     uint8_t y;

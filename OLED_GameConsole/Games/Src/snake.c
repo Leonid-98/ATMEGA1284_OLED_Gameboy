@@ -4,78 +4,50 @@
 #include "game.h"
 #include "ssd1306.h"
 #include "joystcik.h"
+#include "timer_tick.h"
 
-struct snake_st snake = {
-    {SNAKE_SPAWN_X, SNAKE_SPAWN_X + SNAKE_SIZE, SNAKE_SPAWN_X + SNAKE_SIZE * 2},
-    {30, 30, 30},
-    3,
-    Snake_Right};
+static void priv_drawSnake(struct snake *snake);
+static void priv_drawFood(struct snake_food *food);
+static void snake_movePixels(struct snake *snake);
 
-struct snake_food_st food = {64, 32};
-
-void snake_draw()
+void priv_drawSnake(struct snake *snake)
 {
-    for (uint8_t i = 0; i < snake.size; i++)
+    for (uint8_t i = 0; i < snake->size; i++)
     {
-        ssd1306_DrawRectangle(snake.x[i], snake.y[i], snake.x[i] + SNAKE_SIZE, snake.y[i] + SNAKE_SIZE, White);
+        ssd1306_DrawRectangle(snake->x[i], snake->y[i], snake->x[i] + SNAKE_SIZE, snake->y[i] + SNAKE_SIZE, White);
     }
 }
 
-void snake_food_draw()
+void priv_drawFood(struct snake_food *food)
 {
-    ssd1306_FillRectangle(food.x, food.y, food.x + SNAKE_SIZE, food.y + SNAKE_SIZE, White);
+    ssd1306_FillRectangle(food->x, food->y, food->x + SNAKE_SIZE, food->y + SNAKE_SIZE, White);
 }
 
-void snake_movePixels(enum snake_dir dir)
+void snake_movePixels(struct snake *snake)
 {
-    for (uint8_t node_idx = 0; node_idx < snake.size - 1; node_idx++)
+    for (uint8_t node_idx = 0; node_idx < snake->size - 1; node_idx++)
     {
-        snake.x[node_idx] = snake.x[node_idx + 1];
-        snake.y[node_idx] = snake.y[node_idx + 1];
+        snake->x[node_idx] = snake->x[node_idx + 1];
+        snake->y[node_idx] = snake->y[node_idx + 1];
     }
 
-    switch (dir)
+    switch (snake->dir)
     {
     case Snake_Right:
-        snake.x[snake.size - 1] += SNAKE_SIZE;
+        snake->x[snake->size - 1] += SNAKE_SIZE;
         break;
 
     case Snake_Left:
-        snake.x[snake.size - 1] -= SNAKE_SIZE;
+        snake->x[snake->size - 1] -= SNAKE_SIZE;
         break;
 
     case Snake_Up:
-        snake.y[snake.size - 1] += SNAKE_SIZE;
+        snake->y[snake->size - 1] += SNAKE_SIZE;
         break;
 
     case Snake_Down:
-        snake.y[snake.size - 1] -= SNAKE_SIZE;
+        snake->y[snake->size - 1] -= SNAKE_SIZE;
         break;
-    }
-}
-
-void snake_moveByJoystick(void)
-{
-    if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Right)
-    {
-        snake.dir = Snake_Left;
-        snake_movePixels(snake.dir);
-    }
-    else if (joystcik_getX() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Left)
-    {
-        snake.dir = Snake_Right;
-        snake_movePixels(snake.dir);
-    }
-
-    if (joystcik_getY() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Up)
-    {
-        snake.dir = Snake_Down;
-        snake_movePixels(snake.dir);
-    }
-    else if (joystcik_getY() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Down)
-    {
-        snake.dir = Snake_Up;
-        snake_movePixels(snake.dir);
     }
 }
 
@@ -83,17 +55,40 @@ void snake_gameloop()
 {
     while (true)
     {
-        // TODO Init snake game again
+        struct snake snake = {{SNAKE_SPAWN_X}, {30}, 1, Snake_Right};
+        struct snake_food food = {64, 32};
+
+        uint16_t score = 0;
+        TimerTick = 0;
         while (true)
         {
-            buttons_updateAll();
-
+            score = TimerTick;
             ssd1306_Fill(Black);
-            snake_moveByJoystick();
-            snake_draw();
-            snake_food_draw();
 
-            // Food eaten TODO fix
+            // Move snake
+            if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Right)
+            {
+                snake.dir = Snake_Left;
+                snake_movePixels(&snake);
+            }
+            else if (joystcik_getX() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Left)
+            {
+                snake.dir = Snake_Right;
+                snake_movePixels(&snake);
+            }
+
+            if (joystcik_getY() > JOYSTICK_CENTER + JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Up)
+            {
+                snake.dir = Snake_Down;
+                snake_movePixels(&snake);
+            }
+            else if (joystcik_getY() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Down)
+            {
+                snake.dir = Snake_Up;
+                snake_movePixels(&snake);
+            }
+
+            // Eat food
             if ((snake.x[snake.size - 1] <= food.x + SNAKE_SIZE && snake.x[snake.size - 1] + SNAKE_SIZE >= food.x) &&
                 (snake.y[snake.size - 1] <= food.y + SNAKE_SIZE && snake.y[snake.size - 1] + SNAKE_SIZE >= food.y))
             {
@@ -121,18 +116,23 @@ void snake_gameloop()
                     break;
                 }
                 snake.size++;
+
+                food.x = random_randint(0, SSD1306_WIDTH - SNAKE_SIZE);
+                food.y = random_randint(0, SSD1306_HEIGHT - SNAKE_SIZE);
             }
 
-            // todo generate new food location
+            // Check if boundaries hit
             if (snake.x[snake.size - 1] <= 0 || snake.x[snake.size - 1] + SNAKE_SIZE >= SSD1306_WIDTH ||
                 snake.y[snake.size - 1] <= 0 || snake.y[snake.size - 1] + SNAKE_SIZE >= SSD1306_HEIGHT)
             {
                 break;
             }
 
+            priv_drawSnake(&snake);
+            priv_drawFood(&food);
             ssd1306_UpdateScreen();
         }
-        if (game_over(1, Game_Snake)) // TODO add score
+        if (game_over(score, Game_Snake))
         {
             break;
         }
