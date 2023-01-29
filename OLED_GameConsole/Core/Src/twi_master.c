@@ -25,7 +25,8 @@ void tw_start(void)
 	/* Send START condition */
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
 	/* Wait for TWINT flag to set */
-	while (!(TWCR & (1 << TWINT)));
+	while (!(TWCR & (1 << TWINT)))
+		;
 }
 
 void tw_stop(void)
@@ -41,8 +42,7 @@ void tw_write(uint8_t data)
 	TWCR = (1 << TWINT) | (1 << TWEN);
 
 	/* Wait for TWINT flag to set */
-	while (!(TWCR & (1 << TWINT)));
-	
-	}
-	
+	while (!(TWCR & (1 << TWINT)))
+		;
+}
 }
