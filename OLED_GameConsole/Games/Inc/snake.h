@@ -10,10 +10,10 @@
 
 #include <stdint.h>
 
-#define SNAKE_SIZE 4
-
-#define SNAKE_SPAWN_X 10
-#define SNAKE_SPAWN_SIZE 3
+#define SNAKE_SIZE          4
+#define SNAKE_SPAWN_X       10
+#define SNAKE_SPAWN_SIZE    3
+#define SNAKE_SCORE_X       32
 
 enum snake_dir
 {

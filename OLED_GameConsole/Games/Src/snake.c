@@ -5,10 +5,12 @@
 #include "ssd1306.h"
 #include "joystcik.h"
 #include "timer_tick.h"
+#include "random.h"
 
 static void priv_drawSnake(struct snake *snake);
 static void priv_drawFood(struct snake_food *food);
 static void snake_movePixels(struct snake *snake);
+static void priv_displayScore(uint16_t score);
 
 void priv_drawSnake(struct snake *snake)
 {
@@ -51,6 +53,15 @@ void snake_movePixels(struct snake *snake)
     }
 }
 
+static void priv_displayScore(uint16_t score)
+{
+    static char buff[20];
+
+    snprintf(buff, 20, "Score: %d   ", score);
+    ssd1306_SetCursor(SNAKE_SCORE_X, 0);
+    ssd1306_WriteString(buff, Font_6x8, White);
+}
+
 void snake_gameloop()
 {
     while (true)
@@ -64,6 +75,7 @@ void snake_gameloop()
         {
             score = TimerTick;
             ssd1306_Fill(Black);
+            priv_displayScore(score);
 
             // Move snake
             if (joystcik_getX() < JOYSTICK_CENTER - JOYSTICK_CENTER_OFFSET && snake.dir != Snake_Right)

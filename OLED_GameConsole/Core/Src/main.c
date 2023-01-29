@@ -168,13 +168,10 @@ void debug_mainloop(void)
 		ssd1306_SetCursor(64, 12);
 		ssd1306_WriteString(buff3, Font_6x8, White);
 
-		ssd1306_SetCursor(64, 50);
-		ssd1306_WriteString("UP + DOWN", Font_6x8, White);
-
-		ssd1306_SetCursor(64, 30);
-		ssd1306_WriteString("clr score:", Font_6x8, White);
-		ssd1306_SetCursor(64, 40);
-		ssd1306_WriteString("exit: A+B", Font_6x8, White);
+		ssd1306_SetCursor(37, 45);
+		ssd1306_WriteString("Score CLR: A+B", Font_6x8, White);
+		ssd1306_SetCursor(37, 55);
+		ssd1306_WriteString("Exit: UP + DOWN", Font_6x8, White);
 
 		ssd1306_FillCircle(10, 35, 5, White);
 		ssd1306_FillCircle(25, 35, 5, White);
