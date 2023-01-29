@@ -92,8 +92,8 @@ void snake_gameloop()
             snake_food_draw();
 
             // Food eaten TODO fix
-            if ((snake.x[snake.size - 1] >= food.x && snake.x[snake.size - 1] <= food.x + SNAKE_SIZE) &&
-                (snake.y[snake.size - 1] >= food.y && snake.y[snake.size - 1] <= food.y + SNAKE_SIZE))
+            if ((snake.x[snake.size - 1] <= food.x + SNAKE_SIZE && snake.x[snake.size - 1] + SNAKE_SIZE >= food.x) &&
+                (snake.y[snake.size - 1] <= food.y + SNAKE_SIZE && snake.y[snake.size - 1] + SNAKE_SIZE >= food.y))
             {
 
                 switch (snake.dir)
