@@ -15,7 +15,6 @@ Assembled board |  PCB | 3D printed case
 <details><summary>Demo videos (youtube links)</summary>
 
 [ Games ](https://www.youtube.com/watch?v=D_vLn6cdAP8&ab_channel=LeonidTsigrinski)
-
 [ Debug ](https://www.youtube.com/watch?v=agJH_pz0l60&ab_channel=LeonidTsigrinski)
 
 </details>
