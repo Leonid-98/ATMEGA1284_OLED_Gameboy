@@ -14,7 +14,7 @@ AVR 8-bit bare metal application, self-developed schematic + PCB
 </br>
 </details>
 
-
+Tab selector          |  Color selector | Size selector
 :-------------------------:|:-------------------------:|:-------------------------:
 <img src="/media/assembled.png" width="auto" height="auto"/></br>  |  <img src="/media/pcb.png" width="auto" height="auto"/></br> | <img src="/media/case.png" width="auto" height="auto"/></br> 
 
