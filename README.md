@@ -2,7 +2,7 @@
 AVR 8 bit bare metal application, fully custom PCB
 
 ## Demo
-[<img src="/.images/preview.png" width="25%">](https://www.youtube.com/watch?v=D_vLn6cdAP8&ab_channel=LeonidTsigrinski)
+[<img src="/media/preview.png" width="25%">](https://www.youtube.com/watch?v=D_vLn6cdAP8&ab_channel=LeonidTsigrinski)
 </br>
 
 
