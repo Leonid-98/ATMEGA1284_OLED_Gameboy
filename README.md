@@ -1,25 +1,27 @@
 # ATMEGA1284_OLED_Gameboy
 AVR 8-bit bare metal application, self-developed schematic + PCB
 
-## Demo videos
-[Games](https://www.youtube.com/watch?v=D_vLn6cdAP8&ab_channel=LeonidTsigrinski)
-[Debug](https://www.youtube.com/watch?v=agJH_pz0l60&ab_channel=LeonidTsigrinski)
-</br>
+## Generic overview
 
-## Photos
+<details><summary>Photos of assembled board</summary>
 
-<details><summary>Photo of board</summary>
-<br/>
-<img src="/media/assembled.png" width=35% height="auto"/>
-</br>
-</details>
-
-Tab selector          |  Color selector | Size selector
+Assembled board |  PCB | 3D printed case
 :-------------------------:|:-------------------------:|:-------------------------:
 <img src="/media/assembled.png" width="auto" height="auto"/></br>  |  <img src="/media/pcb.png" width="auto" height="auto"/></br> | <img src="/media/case.png" width="auto" height="auto"/></br> 
 
 
-## Generic overview
+</details>
+
+<details><summary>Demo videos (links)</summary>
+[Games](https://www.youtube.com/watch?v=D_vLn6cdAP8&ab_channel=LeonidTsigrinski) </br>
+[Debug](https://www.youtube.com/watch?v=agJH_pz0l60&ab_channel=LeonidTsigrinski) </br>
+</details>
+
+
+
+
+
+
 
 
 
