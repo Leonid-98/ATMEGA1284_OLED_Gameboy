@@ -22,7 +22,7 @@ Assembled board |  PCB | 3D printed case
 
 <details><summary>Schematics</summary>
 
-<a href="media/schematic.pdf" class="image fit"><img src="media/1.png" alt=""></a>
+[embed]media/schematic.pdf[/embed]
 
 </details>
 
