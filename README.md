@@ -20,9 +20,9 @@ Assembled board |  PCB | 3D printed case
 </details>
 
 
-<details><summary>Schematics and PCB design</summary>
+<details><summary>Schematics</summary>
 
-# TODO add photos
+[ Schematic PDF ]("/media/schematic.png")
 
 </details>
 
