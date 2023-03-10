@@ -45,9 +45,42 @@ Very simple project from hardware side: </br>
 
 ## Software overview
 
-Atmega1284 is 8-bit AVR MCU, 8MHz FCPU, 128 KB Flash, 16 KB SRAM, 4 KB EEPROM. </br>
 Most impact were done on code. It's bare metal application, no HAL. Implemented features:</br>
-1. Plays music when game lost. Music can be[ changed ](https://github.com/robsoncouto/arduino-songs)
-2. 
+1. Can play three different games: Dino (Google Chrome no inet), Pong and Snake
+2. Plays music when game over. Music can be[ changed ](https://github.com/robsoncouto/arduino-songs)
+3. Stores score into EEPROM
+4. Score can be cleared in-game
 
-## 
+Project structure contains few different folders:
+1. `Common` contains code for peripheral devices (buzzer, joystick...)
+2. `Core` contains MCU related code (ADC, Timer, I2C...)
+3. `Drivers` contains only one driver - SSD1306 OLED driver
+4. `Games` contains everything related to the gameplay, score calculating, generic bitmaps drawing etc...
+
+## Game overview
+
+When turning device on, user can see main menu processed in the main loop.
+When user selects game, each game handles it's gameloop. </br>
+During the game, score is calculated easy way: IT timer ticker counts how many ticks done. If user reached highest score, it's being stored into EEPROM and shown in the main menu. </br>
+If game ends, user can continue the game or get back into main menu. </br>
+in the main menu, there's additional `Debug` game, where user can see joystick movements, buttons response. There also possible to clear EEPROM score. </br>
+
+## What would I do differently next time?
+
+#### Use ARM MCU
+Using AVR in the first place was mistake, because most AVR application in the web advertise Arduino framework. </br>
+If I would use ARM chip, it would be easier to write game logic within RTOS. Also, I'd spent less time on HAL stuff, like I2C. </br>
+Also, performance would be higher, input lag would be less visible
+
+#### Use SPI instead of I2C
+Since input lag is visible, going over 400 kHz limit would increase user experience
+
+#### Use chip with direct USB support
+For programming I used JTAG, that requires expensive programmer and additional wiring. </br>
+Also, UART communication requires bootloader, that I don't have. Having  direct `D+` `D-` connections would make my life much easier.
+
+#### Make PCB smaller
+PCB is big relatively to OLED, also joystick in current setup feels like a third wheel. In the future, I would go with more compact design.
+
+
+
