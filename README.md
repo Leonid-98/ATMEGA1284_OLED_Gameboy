@@ -77,7 +77,7 @@ Since input lag is visible, going over 400 kHz limit would increase user experie
 
 #### Use chip with direct USB support
 For programming I used JTAG, that requires expensive programmer and additional wiring. </br>
-Also, UART communication requires bootloader, that I don't have. Having  direct `D+` `D-` connections would make my life much easier.
+Also, UART boot requires bootloader, that I don't have. Having  direct `D+` `D-` connections would make my life much easier.
 
 #### Make PCB smaller
 PCB is big relatively to OLED, also joystick in current setup feels like a third wheel. In the future, I would go with more compact design.
